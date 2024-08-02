@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Spatie\Image\Enums\Fit;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use BezhanSalleh\FilamentShield\Traits\HasPanelShield;
@@ -61,5 +62,17 @@ class User extends Authenticatable implements HasMedia
             ->addMediaConversion('preview')
             ->fit(Fit::Contain, 300, 300)
             ->nonQueued();
+    }
+
+    protected static function booted(): void
+    {
+        static::created(function ($user) {
+            $user->wallet()->create();
+        });
+    }
+
+    public function wallet(): HasOne
+    {
+        return $this->hasOne(Wallet::class);
     }
 }
