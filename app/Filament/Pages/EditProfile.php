@@ -6,6 +6,7 @@ use Exception;
 use Filament\Actions\Action;
 use Filament\Facades\Filament;
 use Filament\Forms;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
@@ -98,6 +99,7 @@ class EditProfile extends Page
                 Forms\Components\Section::make('Profile Information')
                     ->description('Update your account\'s profile information and email address.')
                     ->schema([
+                        SpatieMediaLibraryFileUpload::make('avatar'),
                         Forms\Components\TextInput::make('name')
                             ->required(),
                         Forms\Components\TextInput::make('email')
