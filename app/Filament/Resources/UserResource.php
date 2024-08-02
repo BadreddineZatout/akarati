@@ -118,4 +118,9 @@ class UserResource extends Resource
 
         ];
     }
+
+    public static function getNavigationGroup(): ?string
+    {
+        return 'Users Management';
+    }
 }

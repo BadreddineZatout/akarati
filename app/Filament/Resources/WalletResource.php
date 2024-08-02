@@ -3,25 +3,20 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\WalletResource\Pages;
-use App\Filament\Resources\WalletResource\RelationManagers;
-use App\Models\User;
 use App\Models\Wallet;
-use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
-use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class WalletResource extends Resource
 {
     protected static ?string $model = Wallet::class;
-   public static function canCreate(): bool
-   {
-       return false;
-   }
+
+    public static function canCreate(): bool
+    {
+        return false;
+    }
 
     protected static ?string $navigationIcon = 'heroicon-o-wallet';
 
@@ -45,7 +40,7 @@ class WalletResource extends Resource
                     ->badge()
                     ->sortable()
                     ->searchable()
-                    ->url(fn( $record) => url('/users/'. $record->id))
+                    ->url(fn ($record) => url('/users/'.$record->id))
                     ->openUrlInNewTab(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime(),
@@ -56,7 +51,7 @@ class WalletResource extends Resource
 
             ])
             ->actions([
-                Tables\Actions\DeleteAction::make()
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

@@ -2,19 +2,19 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\SupplierResource\Pages;
-use App\Models\Supplier;
+use App\Filament\Resources\EmployeeResource\Pages;
+use App\Models\Employee;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 
-class SupplierResource extends Resource
+class EmployeeResource extends Resource
 {
-    protected static ?string $model = Supplier::class;
+    protected static ?string $model = Employee::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-building-storefront';
+    protected static ?string $navigationIcon = 'heroicon-o-user-group';
 
     public static function form(Form $form): Form
     {
@@ -24,16 +24,12 @@ class SupplierResource extends Resource
                     ->required(),
                 Forms\Components\TextInput::make('last_name')
                     ->required(),
-                Forms\Components\TextInput::make('email')
-                    ->email()
-                    ->unique(),
                 Forms\Components\TextInput::make('phone')
                     ->label('Phone number')
                     ->tel()
                     ->required(),
                 Forms\Components\TextInput::make('address'),
-                Forms\Components\TextInput::make('trade_registery')
-                    ->label('Trade Register'),
+                Forms\Components\DatePicker::make('birthday'),
             ]);
     }
 
@@ -45,15 +41,13 @@ class SupplierResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('last_name')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('email')
-                    ->searchable(),
                 Tables\Columns\TextColumn::make('phone')
                     ->label(__('Phone Number'))
                     ->searchable(),
                 Tables\Columns\TextColumn::make('address')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('trade_registery')
-                    ->searchable(),
+                Tables\Columns\TextColumn::make('birthday')
+                    ->date(),
             ])
             ->filters([
                 //
@@ -79,9 +73,9 @@ class SupplierResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListSuppliers::route('/'),
-            //            'create' => Pages\CreateSupplier::route('/create'),
-            //            'edit' => Pages\EditSupplier::route('/{record}/edit'),
+            'index' => Pages\ListEmployees::route('/'),
+            //            'create' => Pages\CreateEmployee::route('/create'),
+            //            'edit' => Pages\EditEmployee::route('/{record}/edit'),
         ];
     }
 
