@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\UserResource\Pages;
+use App\Filament\Resources\UserResource\RelationManagers\TransactionsRelationManager;
 use App\Models\User;
 use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
 use Filament\Facades\Filament;
@@ -61,7 +62,8 @@ class UserResource extends Resource implements HasShieldPermissions
                     ->required()
                     ->password()
                     ->maxLength(255)
-                    ->rule(Password::default()),
+                    ->rule(Password::default())
+                    ->hiddenOn('view'),
                 Select::make('roles')
                     ->label('Role')
                     ->required()
@@ -128,7 +130,7 @@ class UserResource extends Resource implements HasShieldPermissions
     public static function getRelations(): array
     {
         return [
-            //
+            TransactionsRelationManager::class,
         ];
     }
 
