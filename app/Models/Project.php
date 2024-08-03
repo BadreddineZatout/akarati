@@ -15,6 +15,10 @@ class Project extends Model
     {
         return $this->belongsToMany(Employee::class);
     }
+    public function blocks(): HasMany
+    {
+        return $this->hasMany(Block::class);
+    }
 
     public function payments(): HasMany
     {
@@ -28,8 +32,5 @@ class Project extends Model
     {
         return $this->belongsTo(User::class,'accountant_id');
     }
-    public function blocks(): HasMany
-    {
-        return $this->hasMany(Block::class);
-    }
+
 }

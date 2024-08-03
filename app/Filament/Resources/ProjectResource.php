@@ -98,4 +98,8 @@ class ProjectResource extends Resource
 
         ];
     }
+    public static function getNavigationGroup(): ?string
+    {
+        return 'Projects Management';
+    }
 }
