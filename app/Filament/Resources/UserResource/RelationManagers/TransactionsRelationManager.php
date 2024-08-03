@@ -31,13 +31,13 @@ class TransactionsRelationManager extends RelationManager
                     ->color('success')
                     ->requiresConfirmation()
                     ->action(fn (Transaction $record, TransactionService $transactionService) => $transactionService->acceptTransaction($record))
-                    ->visible(fn ($record) => $record->status === TransactionStatusEnum::PENDING),
+                    ->visible(fn ($record) => ($record->status === TransactionStatusEnum::PENDING) && auth()->user()->can('accept_transaction_user')),
                 Action::make('Refuse')
                     ->icon('heroicon-o-x-circle')
                     ->color('danger')
                     ->requiresConfirmation()
                     ->action(fn (Transaction $record, TransactionService $transactionService) => $transactionService->refuseTransaction($record))
-                    ->visible(fn ($record) => $record->status === TransactionStatusEnum::PENDING),
+                    ->visible(fn ($record) => ($record->status === TransactionStatusEnum::PENDING) && auth()->user()->can('refuse_transaction_user')),
             ]);
     }
 }

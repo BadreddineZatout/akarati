@@ -45,6 +45,8 @@ class UserResource extends Resource implements HasShieldPermissions
             'delete',
             'delete_any',
             'add_transaction',
+            'accept_transaction',
+            'refuse_transaction',
         ];
     }
 

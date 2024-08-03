@@ -5,17 +5,33 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\EmployeeResource\Pages;
 use App\Filament\Resources\EmployeeResource\RelationManagers\PaymentsRelationManager;
 use App\Models\Employee;
+use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 
-class EmployeeResource extends Resource
+class EmployeeResource extends Resource implements HasShieldPermissions
 {
     protected static ?string $model = Employee::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-user-group';
+
+    public static function getPermissionPrefixes(): array
+    {
+        return [
+            'view',
+            'view_any',
+            'create',
+            'update',
+            'delete',
+            'delete_any',
+            'add_payment',
+            'remove_payment',
+            'mark_payment_as_paid',
+        ];
+    }
 
     public static function form(Form $form): Form
     {

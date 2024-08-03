@@ -53,6 +53,7 @@ class PaymentsRelationManager extends RelationManager
             ])
             ->headerActions([
                 Tables\Actions\CreateAction::make()
+                    ->visible(auth()->user()->can('add_payment_employee'))
                     ->mutateFormDataUsing(function (array $data): array {
                         $data['paid_by'] = auth()->id();
                         $data['status'] = PaymentStatusEnum::NOT_PAID->value;
@@ -66,7 +67,7 @@ class PaymentsRelationManager extends RelationManager
                     ->color('success')
                     ->icon('heroicon-o-check')
                     ->requiresConfirmation()
-                    ->visible(fn ($record) => $record->status != PaymentStatusEnum::PAID)
+                    ->visible(fn ($record) => ($record->status != PaymentStatusEnum::PAID) && auth()->user()->can('mark_payment_as_paid_employee'))
                     ->action(function ($record) {
                         $record->status = PaymentStatusEnum::PAID->value;
                         $record->save();
@@ -76,7 +77,8 @@ class PaymentsRelationManager extends RelationManager
                             ->success()
                             ->send();
                     }),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\DeleteAction::make()
+                    ->visible(fn () => auth()->user()->can('remove_payment_employee')),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
