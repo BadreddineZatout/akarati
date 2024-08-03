@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\EmployeeResource\Pages;
+use App\Filament\Resources\EmployeeResource\RelationManagers\PaymentsRelationManager;
 use App\Models\Employee;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -30,6 +31,9 @@ class EmployeeResource extends Resource
                     ->required(),
                 Forms\Components\TextInput::make('address'),
                 Forms\Components\DatePicker::make('birthday'),
+                Forms\Components\Select::make('projects')
+                    ->relationship('projects', 'name')
+                    ->multiple(),
             ]);
     }
 
@@ -53,6 +57,7 @@ class EmployeeResource extends Resource
                 //
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ])
@@ -66,7 +71,7 @@ class EmployeeResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            PaymentsRelationManager::class,
         ];
     }
 
@@ -74,8 +79,9 @@ class EmployeeResource extends Resource
     {
         return [
             'index' => Pages\ListEmployees::route('/'),
-            //            'create' => Pages\CreateEmployee::route('/create'),
-            //            'edit' => Pages\EditEmployee::route('/{record}/edit'),
+            'create' => Pages\CreateEmployee::route('/create'),
+            'edit' => Pages\EditEmployee::route('/{record}/edit'),
+            'view' => Pages\ViewEmployee::route('/{record}'),
         ];
     }
 
