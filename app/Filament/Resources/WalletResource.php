@@ -20,6 +20,8 @@ class WalletResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-wallet';
 
+    protected static bool $shouldRegisterNavigation = false;
+
     public static function form(Form $form): Form
     {
         return $form

@@ -39,7 +39,7 @@ class UserResource extends Resource
                     ->maxLength(255)
                     ->rule(Password::default()),
                 Select::make('roles')
-                    ->label('Roles')
+                    ->label('Role')
                     ->required()
                     ->relationship('roles', 'name'),
             ]);
