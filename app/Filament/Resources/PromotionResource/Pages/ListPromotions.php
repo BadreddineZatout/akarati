@@ -12,6 +12,8 @@ class ListPromotions extends ListRecords
 {
     protected static string $resource = PromotionResource::class;
 
+    public Block $block;
+
 //    protected function getHeaderActions(): array
 //    {
 //        return [
@@ -28,7 +30,7 @@ class ListPromotions extends ListRecords
     {
         return [
             Actions\CreateAction::make()
-                ->url(fn (): string => PromotionResource::getUrl('create', ['record' => request('record')])),
+                ->url(fn (): string => PromotionResource::getUrl('create', ['block' => request('record')])),
         ];
     }
     public function getBreadcrumbs(): array

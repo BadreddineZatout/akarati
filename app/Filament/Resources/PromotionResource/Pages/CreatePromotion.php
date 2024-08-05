@@ -2,25 +2,25 @@
 
 namespace App\Filament\Resources\PromotionResource\Pages;
 
-use App\Filament\Resources\BlockResource;
-use App\Filament\Resources\PromotionResource;
+use App\Models\Block;
 use Filament\Actions;
+use App\Filament\Resources\BlockResource;
 use Filament\Resources\Pages\CreateRecord;
+use App\Filament\Resources\PromotionResource;
 
 class CreatePromotion extends CreateRecord
 {
+    public Block $block;
     protected static string $resource = PromotionResource::class;
     protected function mutateFormDataBeforeCreate(array $data): array
     {
-        $pathElements = explode('/', request()->path());
-        $data['block_id'] = $pathElements[3];
+        $data['block_id'] = $this->block->id;
         return $data;
     }
 
     protected function getRedirectUrl(): string
     {
-        $pathElements = explode('/', request()->path());
-        return PromotionResource::getUrl('promotions', ['record' => $pathElements[3]]);
+        return PromotionResource::getUrl('promotions', ['record' => $this->block->id]);
     }
 
     public function getBreadcrumbs(): array

@@ -4,7 +4,6 @@ namespace App\Filament\Resources;
 
 use App\Enums\PromotionStateEnum;
 use App\Filament\Resources\PromotionResource\Pages;
-use App\Filament\Resources\PromotionResource\RelationManagers;
 use App\Models\Block;
 use App\Models\Promotion;
 use App\Models\PromotionType;
@@ -12,17 +11,18 @@ use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Actions\Action;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class PromotionResource extends Resource
 {
     protected static ?string $slug = 'blocks/promotions';
 
     protected static ?string $model = Promotion::class;
+
     protected static bool $shouldRegisterNavigation = false;
+
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form
@@ -41,10 +41,10 @@ class PromotionResource extends Resource
                     ->label('State')
                     ->options(array_reduce(PromotionStateEnum::cases(), function ($carry, $state) {
                         $carry[$state->value] = ucfirst(str_replace('_', ' ', $state->name));
+
                         return $carry;
                     }, []))
                     ->default('not_launched'),
-
 
                 Forms\Components\TextInput::make('selling_price')
                     ->required()
@@ -57,7 +57,17 @@ class PromotionResource extends Resource
     {
         return $table
             ->columns([
-                //
+                Tables\Columns\TextColumn::make('name')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('promotion_type.name')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('block.name')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('state')
+                    ->badge()
+                    ->color(fn ($record) => PromotionStateEnum::color($record->state)),
+                Tables\Columns\TextColumn::make('selling_price')
+                    ->numeric(),
             ])
             ->filters([
                 //
@@ -84,12 +94,11 @@ class PromotionResource extends Resource
         return [
             'index' => Pages\ListPromotions::route('/'),
             'promotions' => Pages\ListPromotions::route('/{record}'),
-            'create' => Pages\CreatePromotion::route('/{record}/create'),
+            'create' => Pages\CreatePromotion::route('/{block}/create'),
             'edit' => Pages\EditPromotion::route('/{record}/edit'),
-
-
         ];
     }
+
     public static function getEloquentQuery(): Builder
     {
         return parent::getEloquentQuery()->where('block_id', request('record'));
