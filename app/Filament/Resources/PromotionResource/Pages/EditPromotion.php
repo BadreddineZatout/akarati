@@ -12,6 +12,8 @@ class EditPromotion extends EditRecord
 {
     protected static string $resource = PromotionResource::class;
 
+
+
     public function mount($record): void
     {
         $this->record = Promotion::find($record);
@@ -22,7 +24,7 @@ class EditPromotion extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
+//            Actions\DeleteAction::make(),
         ];
     }
 

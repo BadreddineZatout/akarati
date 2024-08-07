@@ -74,6 +74,7 @@ class PromotionResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Pages\CustomDelete::make()->name('custom_delete_action')
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
