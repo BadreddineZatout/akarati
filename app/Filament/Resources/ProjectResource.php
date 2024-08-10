@@ -4,7 +4,6 @@ namespace App\Filament\Resources;
 
 use App\Enums\ProjectStatusEnum;
 use App\Filament\Resources\ProjectResource\Pages;
-use App\Filament\Resources\ProjectResource\RelationManagers;
 use App\Filament\Resources\ProjectResource\RelationManagers\BlocksRelationManager;
 use App\Models\Project;
 use App\Models\User;
@@ -13,8 +12,6 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class ProjectResource extends Resource
 {
@@ -32,6 +29,7 @@ class ProjectResource extends Resource
                     ->label('State')
                     ->options(array_reduce(ProjectStatusEnum::cases(), function ($carry, $state) {
                         $carry[$state->value] = ucfirst(str_replace('_', ' ', $state->name));
+
                         return $carry;
                     }, []))
                     ->default('not_launched'),
@@ -84,7 +82,7 @@ class ProjectResource extends Resource
     public static function getRelations(): array
     {
         return [
-            BlocksRelationManager::class
+            BlocksRelationManager::class,
         ];
     }
 
@@ -92,12 +90,13 @@ class ProjectResource extends Resource
     {
         return [
             'index' => Pages\ListProjects::route('/'),
-//            'create' => Pages\CreateProject::route('/create'),
-//            'edit' => Pages\EditProject::route('/{record}/edit'),
+            //            'create' => Pages\CreateProject::route('/create'),
+            //            'edit' => Pages\EditProject::route('/{record}/edit'),
             'view' => Pages\ViewProject::route('/{record}'),
 
         ];
     }
+
     public static function getNavigationGroup(): ?string
     {
         return 'Projects Management';

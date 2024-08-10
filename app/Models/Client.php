@@ -15,7 +15,7 @@ class Client extends Model
 
     public function promotions(): BelongsToMany
     {
-        return $this->belongsToMany(Promotion::class,'client_promotions');
+        return $this->belongsToMany(Promotion::class, 'client_promotions');
     }
 
     public function profits(): HasMany

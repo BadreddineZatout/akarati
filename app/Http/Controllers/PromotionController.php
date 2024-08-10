@@ -63,6 +63,7 @@ class PromotionController extends Controller
     {
         $block = $promotion->block;
         $promotion->delete();
-        return redirect()->route('filament.admin.resources.blocks.promotions.promotions',['record'=>$block])->with('success', 'Record deleted successfully.');
+
+        return redirect()->route('filament.admin.resources.blocks.promotions.promotions', ['record' => $block])->with('success', 'Record deleted successfully.');
     }
 }

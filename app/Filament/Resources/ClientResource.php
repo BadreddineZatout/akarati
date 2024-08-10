@@ -34,9 +34,10 @@ class ClientResource extends Resource
                 Forms\Components\DatePicker::make('birthday'),
                 Forms\Components\Select::make('promotions')
                     ->relationship('promotions', 'name')
+                    ->required()
                     ->preload()
                     ->multiple()
-                    ->getOptionLabelFromRecordUsing(fn($record) => $record->block->project->name . "-" . $record->block->name . "-" . $record->name)
+                    ->getOptionLabelFromRecordUsing(fn ($record) => $record->block->project->name.'-'.$record->block->name.'-'.$record->name)
                     ->columnSpanFull(),
             ]);
     }

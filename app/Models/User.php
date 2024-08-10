@@ -83,6 +83,7 @@ class User extends Authenticatable implements HasMedia
     {
         return $this->wallet?->transactions();
     }
+
     public function payable(): MorphTo
     {
         return $this->morphTo();

@@ -3,7 +3,6 @@
 namespace App\Filament\Resources\PromotionResource\Pages;
 
 use App\Filament\Resources\PromotionResource;
-use Filament\Actions;
 use Filament\Resources\Pages\ViewRecord;
 
 class ViewPromotion extends ViewRecord

@@ -4,7 +4,6 @@ namespace App\Policies;
 
 use App\Models\PromotionType;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
 
 class PromotionTypePolicy
 {
@@ -68,6 +67,7 @@ class PromotionTypePolicy
     {
         return $user->can('{{ RestoreAny }}');
     }
+
     /**
      * Determine whether the user can replicate.
      */
@@ -75,6 +75,7 @@ class PromotionTypePolicy
     {
         return $user->can('{{ Replicate }}');
     }
+
     /**
      * Determine whether the user can permanently delete the model.
      */
@@ -82,7 +83,6 @@ class PromotionTypePolicy
     {
         return $user->can('{{ ForceDelete }}');
     }
-
 
     /**
      * Determine whether the user can reorder.

@@ -14,18 +14,19 @@ class ListPromotions extends ListRecords
 
     public Block $block;
 
-//    protected function getHeaderActions(): array
-//    {
-//        return [
-//            Actions\CreateAction::make(),
-//        ];
-//    }
+    //    protected function getHeaderActions(): array
+    //    {
+    //        return [
+    //            Actions\CreateAction::make(),
+    //        ];
+    //    }
 
     public function mount(): void
     {
         parent::mount();
         $this->block = Block::findOrFail(request('record'));
     }
+
     protected function getActions(): array
     {
         return [
@@ -33,14 +34,16 @@ class ListPromotions extends ListRecords
                 ->url(fn (): string => PromotionResource::getUrl('create', ['block' => request('record')])),
         ];
     }
+
     public function getBreadcrumbs(): array
     {
         $resource = static::getResource();
+
         return [
             BlockResource::getUrl() => 'blocks',
             '#' => $this->block->name,
             $resource::getUrl('promotions', ['record' => request('record')]) => $resource::getBreadcrumb(),
-            $this->getBreadcrumb()
+            $this->getBreadcrumb(),
         ];
     }
 }

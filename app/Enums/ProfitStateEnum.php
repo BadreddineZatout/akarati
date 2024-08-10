@@ -2,7 +2,7 @@
 
 namespace App\Enums;
 
-enum ProfitStateEnum : string
+enum ProfitStateEnum: string
 {
     case PAID = 'paid';
     case NOT_PAID = 'not paid';
@@ -14,5 +14,4 @@ enum ProfitStateEnum : string
             self::NOT_PAID->value => 'danger',
         };
     }
-
 }
