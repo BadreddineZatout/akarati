@@ -8,6 +8,7 @@ use Filament\Forms\Form;
 use Filament\Forms\Get;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Spatie\Permission\Models\Role;
 
@@ -49,13 +50,17 @@ class ProfitsRelationManager extends RelationManager
             ->recordTitleAttribute('id')
             ->columns([
                 Tables\Columns\TextColumn::make('promotion.fullname'),
-                Tables\Columns\TextColumn::make('paidTo.name'),
+                Tables\Columns\TextColumn::make('paidTo.name')
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('amount'),
                 Tables\Columns\TextColumn::make('paid_at')
-                    ->date('d-m-Y'),
+                    ->date('d-m-Y')
+                    ->sortable(),
             ])
             ->filters([
-                //
+                SelectFilter::make('promotion_id')
+                    ->label('Promotion')
+                    ->options(fn () => $this->ownerRecord->promotions()->get()->pluck('fullname', 'id')),
             ])
             ->headerActions([
                 Tables\Actions\CreateAction::make(),
