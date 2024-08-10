@@ -100,8 +100,6 @@
                 'promotions' => Pages\ListPromotions::route('/{record}'),
                 'create' => Pages\CreatePromotion::route('/{block}/create'),
                 'edit' => Pages\EditPromotion::route('/{record}/edit'),
-                'sell' => Pages\SellPromotion::route('/{record}/sell'),
-
             ];
         }
 

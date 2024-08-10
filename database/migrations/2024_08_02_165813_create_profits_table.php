@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('client_id')->constrained();
             $table->foreignId('promotion_id')->constrained();
-            $table->morphs('payable');
+            $table->foreignId('paid_to')->constrained("users");
             $table->double('amount')->default(0);
             $table->date('paid_at');
             $table->timestamps();
