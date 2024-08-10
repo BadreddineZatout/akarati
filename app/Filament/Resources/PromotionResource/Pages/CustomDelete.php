@@ -2,7 +2,6 @@
 
 namespace App\Filament\Resources\PromotionResource\Pages;
 
-use App\Models\Promotion;
 use Filament\Notifications\Notification;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Actions\DeleteAction;

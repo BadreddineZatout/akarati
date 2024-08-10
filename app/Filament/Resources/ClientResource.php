@@ -3,15 +3,13 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\ClientResource\Pages;
-use App\Filament\Resources\ClientResource\RelationManagers;
+use App\Filament\Resources\ClientResource\RelationManagers\ProfitsRelationManager;
 use App\Models\Client;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class ClientResource extends Resource
 {
@@ -34,6 +32,13 @@ class ClientResource extends Resource
                 Forms\Components\TextInput::make('email'),
                 Forms\Components\TextInput::make('address'),
                 Forms\Components\DatePicker::make('birthday'),
+                Forms\Components\Select::make('promotions')
+                    ->relationship('promotions', 'name')
+                    ->required()
+                    ->preload()
+                    ->multiple()
+                    ->getOptionLabelFromRecordUsing(fn ($record) => $record->block->project->name.'-'.$record->block->name.'-'.$record->name)
+                    ->columnSpanFull(),
             ]);
     }
 
@@ -73,7 +78,7 @@ class ClientResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            ProfitsRelationManager::class,
         ];
     }
 
@@ -87,6 +92,7 @@ class ClientResource extends Resource
 
         ];
     }
+
     public static function getNavigationGroup(): ?string
     {
         return 'Users Management';

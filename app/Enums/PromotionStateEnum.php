@@ -2,7 +2,7 @@
 
 namespace App\Enums;
 
-enum PromotionStateEnum :string
+enum PromotionStateEnum: string
 {
     case PENDING = 'pending';
     case NotLaunched = 'not_launched';

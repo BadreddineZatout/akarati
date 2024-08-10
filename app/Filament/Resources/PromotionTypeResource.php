@@ -10,8 +10,6 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class PromotionTypeResource extends Resource
 {
@@ -57,7 +55,7 @@ class PromotionTypeResource extends Resource
     public static function getRelations(): array
     {
         return [
-            RelationManagers\PromotionsRelationManager::class
+            RelationManagers\PromotionsRelationManager::class,
         ];
     }
 
@@ -65,12 +63,13 @@ class PromotionTypeResource extends Resource
     {
         return [
             'index' => Pages\ListPromotionTypes::route('/'),
-//            'create' => Pages\CreatePromotionType::route('/create'),
-//            'edit' => Pages\EditPromotionType::route('/{record}/edit'),
+            //            'create' => Pages\CreatePromotionType::route('/create'),
+            //            'edit' => Pages\EditPromotionType::route('/{record}/edit'),
             'view' => Pages\ViewPromotionType::route('/{record}'),
 
         ];
     }
+
     public static function getNavigationGroup(): ?string
     {
         return 'Projects Management';

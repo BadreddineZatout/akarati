@@ -10,8 +10,6 @@ use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class BlocksRelationManager extends RelationManager
 {
@@ -28,6 +26,7 @@ class BlocksRelationManager extends RelationManager
                     ->label('State')
                     ->options(array_reduce(BlockStatusEnum::cases(), function ($carry, $state) {
                         $carry[$state->value] = ucfirst(str_replace('_', ' ', $state->name));
+
                         return $carry;
                     }, []))
                     ->default('not_launched'),
@@ -69,8 +68,6 @@ class BlocksRelationManager extends RelationManager
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
-            ])
-            ;
+            ]);
     }
-
 }

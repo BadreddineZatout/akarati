@@ -2,29 +2,28 @@
 
 namespace App\Models;
 
+use App\Enums\ProfitStateEnum;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Profit extends Model
+class ClientPromotion extends Model
 {
+    use HasFactory;
+
     protected $guarded = [];
 
     protected $casts = [
-        'paid_at' => 'date',
+        'state' => ProfitStateEnum::class,
     ];
-
-    public function promotion(): BelongsTo
-    {
-        return $this->belongsTo(Promotion::class);
-    }
 
     public function client(): BelongsTo
     {
         return $this->belongsTo(Client::class);
     }
 
-    public function paidTo(): BelongsTo
+    public function promotion(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'paid_to');
+        return $this->belongsTo(Promotion::class);
     }
 }
