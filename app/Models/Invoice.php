@@ -2,12 +2,23 @@
 
 namespace App\Models;
 
+use App\Enums\InvoiceTypeEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class Invoice extends Model
 {
     use HasFactory;
 
     protected $guarded = [];
+
+    protected $casts = [
+        'type' => InvoiceTypeEnum::class,
+    ];
+
+    public function invoicable(): MorphTo
+    {
+        return $this->morphTo();
+    }
 }
