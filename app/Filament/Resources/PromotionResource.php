@@ -72,9 +72,9 @@ class PromotionResource extends Resource
                 //
             ])
             ->actions([
-                Action::make('sell_promotion')
-                    ->url(fn (Promotion $record): string => PromotionResource::getUrl('sell', ['record' => $record]))->icon('heroicon-o-shopping-bag')
-                    ->color('primary'),
+//                Action::make('sell_promotion')
+//                    ->url(fn (Promotion $record): string => PromotionResource::getUrl('sell', ['record' => $record]))->icon('heroicon-o-shopping-bag')
+//                    ->color('primary'),
                 Tables\Actions\EditAction::make(),
                 Pages\CustomDelete::make()->name('custom_delete_action'),
             ])
