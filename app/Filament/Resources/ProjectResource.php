@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Enums\ProjectStatusEnum;
 use App\Filament\Resources\ProjectResource\Pages;
+use App\Filament\Resources\ProjectResource\RelationManagers\BillsRelationManager;
 use App\Filament\Resources\ProjectResource\RelationManagers\BlocksRelationManager;
 use App\Filament\Resources\ProjectResource\RelationManagers\InvoicesRelationManager;
 use App\Filament\Resources\ProjectResource\RelationManagers\SupplierInvoicesRelationManager;
@@ -87,6 +88,7 @@ class ProjectResource extends Resource
             BlocksRelationManager::class,
             InvoicesRelationManager::class,
             SupplierInvoicesRelationManager::class,
+            BillsRelationManager::class,
         ];
     }
 
