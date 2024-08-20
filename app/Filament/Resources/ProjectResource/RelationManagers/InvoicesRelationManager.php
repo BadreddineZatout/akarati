@@ -2,15 +2,17 @@
 
 namespace App\Filament\Resources\ProjectResource\RelationManagers;
 
-use App\Enums\InvoiceTypeEnum;
-use App\Models\User;
 use Filament\Forms;
-use Filament\Forms\Components\MorphToSelect;
-use Filament\Forms\Form;
-use Filament\Resources\RelationManagers\RelationManager;
+use App\Models\User;
 use Filament\Tables;
+use App\Models\Invoice;
+use Filament\Forms\Form;
 use Filament\Tables\Table;
+use App\Enums\InvoiceTypeEnum;
+use App\Services\InvoiceService;
 use Illuminate\Database\Eloquent\Builder;
+use Filament\Forms\Components\MorphToSelect;
+use Filament\Resources\RelationManagers\RelationManager;
 
 class InvoicesRelationManager extends RelationManager
 {
@@ -63,6 +65,13 @@ class InvoicesRelationManager extends RelationManager
                     }),
             ])
             ->actions([
+                Tables\Actions\Action::make('Download')
+                    ->icon('heroicon-o-inbox-arrow-down')
+                    ->color('success')
+                    ->requiresConfirmation()
+                    ->action(function(Invoice $record, InvoiceService $invoiceService){
+                        $invoiceService->downloadInvoice($record);
+                    }),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ])
