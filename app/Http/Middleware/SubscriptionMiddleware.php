@@ -29,7 +29,7 @@ class SubscriptionMiddleware
         $subscription = Subscription::query()->where('subscriber_id',$user->id)
             ->where('status','active')
             ->first();
-        if(Carbon::parse($subscription->ends_at)->isBefore(Carbon::now()))
+        if($subscription && Carbon::parse($subscription->ends_at)->isBefore(Carbon::now()))
             $subscription->update(['status' =>'ended']);
         else
             return true;
