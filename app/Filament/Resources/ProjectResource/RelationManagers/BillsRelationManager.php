@@ -2,13 +2,15 @@
 
 namespace App\Filament\Resources\ProjectResource\RelationManagers;
 
-use App\Enums\InvoiceTypeEnum;
 use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
+use App\Models\Invoice;
+use Filament\Forms\Form;
 use Filament\Tables\Table;
+use App\Enums\InvoiceTypeEnum;
+use App\Services\InvoiceService;
 use Illuminate\Database\Eloquent\Model;
+use Filament\Resources\RelationManagers\RelationManager;
 
 class BillsRelationManager extends RelationManager
 {
@@ -68,6 +70,13 @@ class BillsRelationManager extends RelationManager
                     }),
             ])
             ->actions([
+                Tables\Actions\Action::make('Generate')
+                    ->icon('heroicon-o-inbox-arrow-down')
+                    ->color('success')
+                    ->requiresConfirmation()
+                    ->action(function (Invoice $record, InvoiceService $invoiceService) {
+                        return $invoiceService->downloadBill($record);
+                    }),
                 Tables\Actions\EditAction::make()
                     ->mutateRecordDataUsing(function (array $data, $record): array {
                         $data['items'] = $record->items->map(fn ($item) => ['name' => $item->name, 'price' => $item->price]);

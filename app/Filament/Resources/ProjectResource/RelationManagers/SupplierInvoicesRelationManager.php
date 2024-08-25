@@ -2,15 +2,17 @@
 
 namespace App\Filament\Resources\ProjectResource\RelationManagers;
 
-use App\Enums\InvoiceTypeEnum;
-use App\Models\Supplier;
 use Filament\Forms;
-use Filament\Forms\Components\MorphToSelect;
-use Filament\Forms\Form;
-use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
+use App\Models\Invoice;
+use App\Models\Supplier;
+use Filament\Forms\Form;
 use Filament\Tables\Table;
+use App\Enums\InvoiceTypeEnum;
+use App\Services\InvoiceService;
 use Illuminate\Database\Eloquent\Model;
+use Filament\Forms\Components\MorphToSelect;
+use Filament\Resources\RelationManagers\RelationManager;
 
 class SupplierInvoicesRelationManager extends RelationManager
 {
@@ -78,6 +80,13 @@ class SupplierInvoicesRelationManager extends RelationManager
                     }),
             ])
             ->actions([
+                Tables\Actions\Action::make('Generate')
+                    ->icon('heroicon-o-inbox-arrow-down')
+                    ->color('success')
+                    ->requiresConfirmation()
+                    ->action(function (Invoice $record, InvoiceService $invoiceService) {
+                        return $invoiceService->downloadSupplierInvoice($record);
+                    }),
                 Tables\Actions\EditAction::make()
                     ->mutateRecordDataUsing(function (array $data, $record): array {
                         $data['items'] = $record->items->map(fn ($item) => ['name' => $item->name, 'price' => $item->price]);

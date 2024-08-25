@@ -160,12 +160,9 @@
             <thead>
                 <tr>
                     <th class="border-0 pl-0 party-header" width="48.5%">
-                        {{ __('invoices::invoice.user') }}
-                    </th>
-                    <th class="border-0" width="3%"></th>
-                    <th class="border-0 pl-0 party-header">
                         {{ __('invoices::invoice.project') }}
                     </th>
+                    <th class="border-0" width="3%"></th>
                 </tr>
             </thead>
             <tbody>
@@ -208,43 +205,6 @@
                         @endforeach
                     </td>
                     <td class="border-0"></td>
-                    <td class="px-0">
-                        @if($invoice->buyer->name)
-                            <p class="buyer-name">
-                                <strong>{{ $invoice->buyer->name }}</strong>
-                            </p>
-                        @endif
-
-                        @if($invoice->buyer->address)
-                            <p class="buyer-address">
-                                {{ __('invoices::invoice.address') }}: {{ $invoice->buyer->address }}
-                            </p>
-                        @endif
-
-                        @if($invoice->buyer->code)
-                            <p class="buyer-code">
-                                {{ __('invoices::invoice.code') }}: {{ $invoice->buyer->code }}
-                            </p>
-                        @endif
-
-                        @if($invoice->buyer->vat)
-                            <p class="buyer-vat">
-                                {{ __('invoices::invoice.vat') }}: {{ $invoice->buyer->vat }}
-                            </p>
-                        @endif
-
-                        @if($invoice->buyer->phone)
-                            <p class="buyer-phone">
-                                {{ __('invoices::invoice.phone') }}: {{ $invoice->buyer->phone }}
-                            </p>
-                        @endif
-
-                        @foreach($invoice->buyer->custom_fields as $key => $value)
-                            <p class="buyer-custom-field">
-                                {{ ucfirst($key) }}: {{ $value }}
-                            </p>
-                        @endforeach
-                    </td>
                 </tr>
             </tbody>
         </table>
