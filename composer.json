@@ -11,7 +11,8 @@
         "filament/spatie-laravel-media-library-plugin": "^3.2",
         "laravel/framework": "^11.9",
         "laravel/tinker": "^2.9",
-        "laraveldaily/laravel-invoices": "^4.0"
+        "laraveldaily/laravel-invoices": "^4.0",
+        "laravelcm/laravel-subscriptions": "^1.3"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
