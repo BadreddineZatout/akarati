@@ -43,7 +43,8 @@ class InvoiceService
         return Storage::disk('public')->download("$file_name.pdf");
     }
 
-    public function downloadSupplierInvoice(ModelsInvoice $invoice) {
+    public function downloadSupplierInvoice(ModelsInvoice $invoice)
+    {
         $project = new Party([
             'name' => $invoice->project->name,
         ]);
@@ -76,11 +77,11 @@ class InvoiceService
         return Storage::disk('public')->download("$file_name.pdf");
     }
 
-    public function downloadBill(ModelsInvoice $invoice) {
+    public function downloadBill(ModelsInvoice $invoice)
+    {
         $project = new Party([
             'name' => $invoice->project->name,
         ]);
-
 
         $items = $invoice->items->map(function ($item) {
             return InvoiceItem::make($item->name)

@@ -17,7 +17,7 @@ class Invoice extends Model
 
     protected $casts = [
         'type' => InvoiceTypeEnum::class,
-        'invoiced_at' => 'date'
+        'invoiced_at' => 'date',
     ];
 
     public function invoicable(): MorphTo

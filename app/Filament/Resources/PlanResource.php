@@ -5,14 +5,12 @@ namespace App\Filament\Resources;
 use App\Enums\PlanStateEnum;
 use App\Filament\Resources\PlanResource\Pages;
 use App\Filament\Resources\PlanResource\RelationManagers;
-use Laravelcm\Subscriptions\Models\Plan;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Laravelcm\Subscriptions\Models\Plan;
 
 class PlanResource extends Resource
 {
@@ -29,8 +27,8 @@ class PlanResource extends Resource
                 Forms\Components\TextInput::make('description')->label('description'),
                 Forms\Components\Select::make('is_active')->label('State')
                     ->options([
-                        0=>'Disabled',
-                        1=>'Active',
+                        0 => 'Disabled',
+                        1 => 'Active',
                     ])->default(1)->required(),
                 Forms\Components\TextInput::make('price')
                     ->required()
@@ -46,26 +44,26 @@ class PlanResource extends Resource
                     ->default(0),
                 Forms\Components\Select::make('trial_interval')
                     ->options([
-                        'day'=>'Day',
-                        'month'=>'Month',
+                        'day' => 'Day',
+                        'month' => 'Month',
                     ])->default('day'),
                 Forms\Components\TextInput::make('invoice_period')
                     ->numeric()
                     ->default(0),
                 Forms\Components\Select::make('trial_interval')
                     ->options([
-                        'day'=>'Day',
-                        'month'=>'Month',
-                        'year'=>'Year',
+                        'day' => 'Day',
+                        'month' => 'Month',
+                        'year' => 'Year',
                     ])->default('month'),
                 Forms\Components\TextInput::make('grace_period')
                     ->numeric()
                     ->default(0),
                 Forms\Components\Select::make('grace_interval')
                     ->options([
-                        'day'=>'Day',
-                        'month'=>'Month',
-                        'year'=>'Year',
+                        'day' => 'Day',
+                        'month' => 'Month',
+                        'year' => 'Year',
                     ])->default('day'),
                 Forms\Components\TextInput::make('prorate_day')
                     ->numeric(),
@@ -77,7 +75,7 @@ class PlanResource extends Resource
                     ->numeric(),
                 Forms\Components\TextInput::make('sort_order')
                     ->numeric()->default(0),
-                ]);
+            ]);
     }
 
     public static function table(Table $table): Table
@@ -117,7 +115,7 @@ class PlanResource extends Resource
     public static function getRelations(): array
     {
         return [
-            RelationManagers\FeaturesRelationManager::class
+            RelationManagers\FeaturesRelationManager::class,
         ];
     }
 
@@ -130,6 +128,7 @@ class PlanResource extends Resource
             'edit' => Pages\EditPlan::route('/{record}/edit'),
         ];
     }
+
     public static function getNavigationGroup(): ?string
     {
         return 'Subscriptions Management';

@@ -6,6 +6,7 @@ use BezhanSalleh\FilamentShield\Traits\HasPanelShield;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -17,10 +18,10 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements HasMedia
-{    use HasPlanSubscriptions;
-
+{
     use HasFactory, Notifiable;
     use HasPanelShield;
+    use HasPlanSubscriptions;
     use HasRoles;
     use InteractsWithMedia;
     use SoftDeletes;
@@ -82,5 +83,20 @@ class User extends Authenticatable implements HasMedia
     public function transactions(): HasMany
     {
         return $this->wallet?->transactions();
+    }
+
+    public function invoices(): MorphMany
+    {
+        return $this->morphMany(Invoice::class, 'invoicable');
+    }
+
+    public function payments(): HasMany
+    {
+        return $this->hasMany(Payment::class, 'paid_by');
+    }
+
+    public function profits(): HasMany
+    {
+        return $this->hasMany(Profit::class, 'paid_to');
     }
 }

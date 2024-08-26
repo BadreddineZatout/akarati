@@ -3,12 +3,9 @@
 namespace App\Jobs;
 
 use App\Models\User;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Foundation\Queue\Queueable;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\SerializesModels;
 use App\Services\SubscriptionService;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Support\Facades\Log;
 
 class SubscriptionJob implements ShouldQueue
@@ -28,11 +25,12 @@ class SubscriptionJob implements ShouldQueue
      */
     public function handle(): void
     {
-        $subscriptionService = new SubscriptionService();
+        $subscriptionService = new SubscriptionService;
         Log::info('Verifying subscriptions...');
         $users = User::get();
-        foreach ($users as $user)
+        foreach ($users as $user) {
             $subscriptionService->check($user);
+        }
         Log::info('Subscription verification completed.');
     }
 }
