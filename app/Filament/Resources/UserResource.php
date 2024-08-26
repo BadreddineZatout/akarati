@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\UserResource\Pages;
+use App\Filament\Resources\UserResource\RelationManagers\InvoicesRelationManager;
 use App\Filament\Resources\UserResource\RelationManagers\TransactionsRelationManager;
 use App\Models\User;
 use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
@@ -133,6 +134,7 @@ class UserResource extends Resource implements HasShieldPermissions
     {
         return [
             TransactionsRelationManager::class,
+            InvoicesRelationManager::class,
         ];
     }
 
