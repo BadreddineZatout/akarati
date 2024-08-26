@@ -2,15 +2,15 @@
 
 namespace App\Filament\Resources\ProjectResource\RelationManagers;
 
-use Filament\Forms;
-use Filament\Tables;
-use App\Models\Invoice;
-use Filament\Forms\Form;
-use Filament\Tables\Table;
 use App\Enums\InvoiceTypeEnum;
+use App\Models\Invoice;
 use App\Services\InvoiceService;
-use Illuminate\Database\Eloquent\Model;
+use Filament\Forms;
+use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Tables;
+use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 
 class BillsRelationManager extends RelationManager
 {
@@ -100,9 +100,9 @@ class BillsRelationManager extends RelationManager
                 Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
-                    Tables\Actions\BulkActionGroup::make([
-                        Tables\Actions\DeleteBulkAction::make(),
-                    ]),
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make(),
+                ]),
             ]);
     }
 }

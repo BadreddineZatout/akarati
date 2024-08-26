@@ -74,7 +74,7 @@ class SupplierResource extends Resource
     public static function getRelations(): array
     {
         return [
-            InvoicesRelationManager::class
+            InvoicesRelationManager::class,
         ];
     }
 

@@ -2,14 +2,14 @@
 
 namespace App\Filament\Resources\UserResource\RelationManagers;
 
-use Filament\Forms;
-use Filament\Tables;
 use App\Models\Invoice;
-use Filament\Forms\Form;
-use Filament\Tables\Table;
 use App\Services\InvoiceService;
-use Illuminate\Database\Eloquent\Model;
+use Filament\Forms;
+use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Tables;
+use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 
 class InvoicesRelationManager extends RelationManager
 {
@@ -17,7 +17,7 @@ class InvoicesRelationManager extends RelationManager
 
     public static function canViewForRecord(Model $ownerRecord, string $pageClass): bool
     {
-        return !$ownerRecord->hasRole('super_admin');
+        return ! $ownerRecord->hasRole('super_admin');
     }
 
     public function form(Form $form): Form

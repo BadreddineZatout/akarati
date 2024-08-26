@@ -5,7 +5,6 @@ namespace App\Filament\Resources\SubscriptionResource\Pages;
 use App\Filament\Resources\SubscriptionResource;
 use App\Models\User;
 use Carbon\Carbon;
-use Filament\Actions;
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Validator;
@@ -14,7 +13,6 @@ use Laravelcm\Subscriptions\Models\Plan;
 class CreateSubscription extends CreateRecord
 {
     protected static string $resource = SubscriptionResource::class;
-
 
     protected function handleRecordCreation(array $data): Model
     {
@@ -26,11 +24,12 @@ class CreateSubscription extends CreateRecord
 
         if ($validator->fails()) {
             $this->notify('danger', 'Validation failed');
+
             return [];
         }
         $user = User::find($data['subscriber_id']);
         $plan = Plan::find($data['plan_id']);
-        return $user->newPlanSubscription('main', $plan,Carbon::parse($data['starts_at']));
-    }
 
+        return $user->newPlanSubscription('main', $plan, Carbon::parse($data['starts_at']));
+    }
 }

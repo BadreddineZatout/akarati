@@ -18,10 +18,10 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements HasMedia
-{    use HasPlanSubscriptions;
-
+{
     use HasFactory, Notifiable;
     use HasPanelShield;
+    use HasPlanSubscriptions;
     use HasRoles;
     use InteractsWithMedia;
     use SoftDeletes;
@@ -88,5 +88,15 @@ class User extends Authenticatable implements HasMedia
     public function invoices(): MorphMany
     {
         return $this->morphMany(Invoice::class, 'invoicable');
+    }
+
+    public function payments(): HasMany
+    {
+        return $this->hasMany(Payment::class, 'paid_by');
+    }
+
+    public function profits(): HasMany
+    {
+        return $this->hasMany(Profit::class, 'paid_to');
     }
 }

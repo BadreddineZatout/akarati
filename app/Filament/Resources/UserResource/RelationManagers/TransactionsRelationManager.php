@@ -2,14 +2,14 @@
 
 namespace App\Filament\Resources\UserResource\RelationManagers;
 
-use Filament\Tables;
-use Filament\Tables\Table;
-use App\Models\Transaction;
-use Filament\Tables\Actions\Action;
 use App\Enums\TransactionStatusEnum;
+use App\Models\Transaction;
 use App\Services\TransactionService;
-use Illuminate\Database\Eloquent\Model;
 use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Tables;
+use Filament\Tables\Actions\Action;
+use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 
 class TransactionsRelationManager extends RelationManager
 {
@@ -17,7 +17,7 @@ class TransactionsRelationManager extends RelationManager
 
     public static function canViewForRecord(Model $ownerRecord, string $pageClass): bool
     {
-        return !$ownerRecord->hasRole('super_admin');
+        return ! $ownerRecord->hasRole('super_admin');
     }
 
     public function table(Table $table): Table

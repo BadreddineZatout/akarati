@@ -2,15 +2,13 @@
 
 namespace App\Filament\Resources\SupplierResource\RelationManagers;
 
-use Filament\Forms;
-use Filament\Tables;
 use App\Models\Invoice;
-use Filament\Forms\Form;
-use Filament\Tables\Table;
 use App\Services\InvoiceService;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Forms;
+use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Tables;
+use Filament\Tables\Table;
 
 class InvoicesRelationManager extends RelationManager
 {
@@ -32,7 +30,7 @@ class InvoicesRelationManager extends RelationManager
             ->recordTitleAttribute('id')
             ->columns([
                 Tables\Columns\TextColumn::make('id')
-                ->label('#'),
+                    ->label('#'),
                 Tables\Columns\TextColumn::make('project.name')
                     ->label('receiver'),
                 Tables\Columns\TextColumn::make('amount')

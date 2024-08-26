@@ -16,7 +16,7 @@ return Application::configure(basePath: dirname(__DIR__))
             SubscriptionMiddleware::class,
         ]);
         $middleware->alias([
-            'subscription.verify' => SubscriptionMiddleware::class
+            'subscription.verify' => SubscriptionMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
