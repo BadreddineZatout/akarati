@@ -7,8 +7,6 @@ use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class FeaturesRelationManager extends RelationManager
 {
@@ -32,9 +30,9 @@ class FeaturesRelationManager extends RelationManager
                     ->numeric(),
                 Forms\Components\Select::make('resettable_interval')
                     ->options([
-                        'day'=>'Day',
-                        'month'=>'Month',
-                        'year'=>'Year',
+                        'day' => 'Day',
+                        'month' => 'Month',
+                        'year' => 'Year',
                     ])->default('month'),
                 Forms\Components\TextInput::make('sort_order')
                     ->numeric()->default(0),

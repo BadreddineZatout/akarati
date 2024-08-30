@@ -2,7 +2,6 @@
 
 namespace App\Console\Commands;
 
-use App\Jobs\SubscriptionJob;
 use App\Models\User;
 use App\Services\SubscriptionService;
 use Illuminate\Console\Command;
@@ -29,10 +28,12 @@ class SubscriptionVerification extends Command
      */
     public function handle()
     {
-        $subscriptionService = new SubscriptionService();
+        $subscriptionService = new SubscriptionService;
         Log::info('Verifying subscriptions...');
         $users = User::get();
-        foreach ($users as $user)
+        foreach ($users as $user) {
             $subscriptionService->check($user);
-        Log::info('Subscription verification completed.');    }
+        }
+        Log::info('Subscription verification completed.');
+    }
 }

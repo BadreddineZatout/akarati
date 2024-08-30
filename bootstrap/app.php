@@ -18,7 +18,7 @@ return Application::configure(basePath: dirname(__DIR__))
             ProjectLimitSeeder::class,
         ]);
         $middleware->alias([
-            'subscription.verify' => SubscriptionMiddleware::class,
+            'subscription.verify' => SubscriptionMiddleware::class
             'project.limit' => ProjectLimitSeeder::class,
         ]);
     })
