@@ -18,7 +18,7 @@ class ProjectLimitMiddleware
     public function handle(Request $request, Closure $next): Response
     {
         $user= $request->user();
-        if ($user && $user->hasAnyRoles(['promoter']) && Route::is('filament.admin.resources.projects.store')){
+        if ($user && $user->hasAnyRole(['promoter']) && Route::is('filament.admin.resources.projects.store')){
            if(count($user->promoter_project) <= (int)(setting('project_limit',3))){
                return $next($request);
            }else{

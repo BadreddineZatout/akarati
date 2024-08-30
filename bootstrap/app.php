@@ -1,7 +1,7 @@
 <?php
 
+use App\Http\Middleware\ProjectLimitMiddleware;
 use App\Http\Middleware\SubscriptionMiddleware;
-use Database\Seeders\ProjectLimitSeeder;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -15,11 +15,11 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->web(append: [
             SubscriptionMiddleware::class,
-            ProjectLimitSeeder::class,
+            ProjectLimitMiddleware::class,
         ]);
         $middleware->alias([
-            'subscription.verify' => SubscriptionMiddleware::class
-            'project.limit' => ProjectLimitSeeder::class,
+            'subscription.verify' => SubscriptionMiddleware::class,
+            'project.limit' => ProjectLimitMiddleware::class
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
