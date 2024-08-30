@@ -75,6 +75,10 @@ class User extends Authenticatable implements HasMedia
             $user->wallet()->create();
         });
     }
+    public function promoter_projects(): HasMany
+    {
+        return $this->hasMany(Project::class, 'promoter_id');
+    }
 
     public function wallet(): HasOne
     {
