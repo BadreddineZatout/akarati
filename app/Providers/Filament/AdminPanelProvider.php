@@ -4,6 +4,7 @@ namespace App\Providers\Filament;
 
 use App\Filament\Pages\EditProfile;
 use App\Http\Middleware\SubscriptionMiddleware;
+use Database\Seeders\ProjectLimitSeeder;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -58,6 +59,7 @@ class AdminPanelProvider extends PanelProvider
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 SubscriptionMiddleware::class,
+                ProjectLimitSeeder::class,
                 DispatchServingFilamentEvent::class,
             ])
             ->authMiddleware([
