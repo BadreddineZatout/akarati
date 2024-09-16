@@ -2,18 +2,21 @@
 
 namespace App\Filament\Resources\ProjectResource\RelationManagers;
 
-use App\Enums\InvoiceTypeEnum;
-use App\Models\Invoice;
-use App\Models\User;
-use App\Services\InvoiceService;
 use Filament\Forms;
-use Filament\Forms\Components\MorphToSelect;
-use Filament\Forms\Form;
-use Filament\Resources\RelationManagers\RelationManager;
+use App\Models\User;
 use Filament\Tables;
+use App\Models\Invoice;
+use Filament\Forms\Form;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
+use App\Enums\InvoiceTypeEnum;
+use App\Services\WalletService;
+use App\Services\InvoiceService;
 use Illuminate\Database\Eloquent\Model;
+use Filament\Notifications\Notification;
+use Filament\Tables\Actions\CreateAction;
+use Illuminate\Database\Eloquent\Builder;
+use Filament\Forms\Components\MorphToSelect;
+use Filament\Resources\RelationManagers\RelationManager;
 
 class InvoicesRelationManager extends RelationManager
 {
@@ -24,7 +27,7 @@ class InvoicesRelationManager extends RelationManager
         return $form
             ->schema([
                 Forms\Components\MorphToSelect::make('invoicable')
-                    ->label('receiver')
+                    ->label('User')
                     ->types([
                         MorphToSelect\Type::make(User::class)
                             ->titleAttribute('name'),
@@ -54,7 +57,7 @@ class InvoicesRelationManager extends RelationManager
             ->columns([
                 Tables\Columns\TextColumn::make('invoicable.name')
                     ->searchable()
-                    ->label('receiver'),
+                    ->label('User'),
                 Tables\Columns\TextColumn::make('invoicable.roles.name')
                     ->label('role'),
                 Tables\Columns\TextColumn::make('amount')
@@ -71,7 +74,19 @@ class InvoicesRelationManager extends RelationManager
                         $data['amount'] = 0;
 
                         return $data;
-                    })->using(function (array $data, string $model): Model {
+                    })->before(function(CreateAction $action, $data): void{
+                        $amount = array_sum(array_map(fn($item) => $item['price'],$data['items']));
+                        $wallet = User::find($data['invoicable_id'])->wallet;
+                        if (!$wallet || !$wallet->hasEnoughBalance($amount)) {
+                            Notification::make()
+                                ->danger()
+                                ->title('You don\'t have enough balance!')
+                                ->send();
+
+                            $action->halt();
+                        }
+                    })
+                    ->using(function (array $data, string $model, WalletService $walletService): Model {
                         $items = $data['items'];
                         unset($data['items']);
                         $invoice = $this->ownerRecord->invoices()->create($data);
@@ -79,6 +94,8 @@ class InvoicesRelationManager extends RelationManager
                             $item = $invoice->items()->create($item);
                             $invoice->increment('amount', $item->price);
                         }
+
+                        $walletService->subAmount($invoice->invoicable->wallet, $invoice->amount);
 
                         return $invoice;
                     }),
@@ -96,7 +113,7 @@ class InvoicesRelationManager extends RelationManager
                         $data['items'] = $record->items->map(fn ($item) => ['name' => $item->name, 'price' => $item->price]);
 
                         return $data;
-                    })->using(function (Model $record, array $data): Model {
+                    })->using(function (Model $record, array $data, WalletService $walletService): Model {
                         $items = $data['items'];
                         unset($data['items']);
                         $record->update($data);
@@ -109,14 +126,14 @@ class InvoicesRelationManager extends RelationManager
                             $record->increment('amount', $item->price);
                         }
 
+                        $walletService->subAmount($record->invoicable->wallet, $record->amount);
+
                         return $record;
                     }),
-                Tables\Actions\DeleteAction::make(),
-            ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
+                Tables\Actions\DeleteAction::make()
+                ->after(function ($record, WalletService $walletService){
+                    $walletService->addAmount($record->invoicable->wallet, $record->amount);
+                }),
             ]);
     }
 }
