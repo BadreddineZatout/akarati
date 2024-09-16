@@ -28,4 +28,9 @@ class Wallet extends Model
             get: fn () => $this->transactions()->where('status', TransactionStatusEnum::PENDING->value)->count(),
         );
     }
+
+    public function hasEnoughBalance($amount): bool
+    {
+        return $this->balance >= $amount;
+    }
 }
