@@ -2,18 +2,19 @@
 
 namespace App\Filament\Resources\ClientResource\RelationManagers;
 
+use Filament\Forms;
+use App\Models\User;
+use Filament\Tables;
+use Filament\Forms\Get;
+use Filament\Forms\Form;
+use Filament\Tables\Table;
 use App\Enums\ProfitStateEnum;
 use App\Models\ClientPromotion;
-use App\Models\User;
-use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Forms\Get;
-use Filament\Notifications\Notification;
-use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Tables;
-use Filament\Tables\Filters\SelectFilter;
-use Filament\Tables\Table;
+use App\Services\WalletService;
 use Spatie\Permission\Models\Role;
+use Filament\Notifications\Notification;
+use Filament\Tables\Filters\SelectFilter;
+use Filament\Resources\RelationManagers\RelationManager;
 
 class ProfitsRelationManager extends RelationManager
 {
@@ -85,7 +86,8 @@ class ProfitsRelationManager extends RelationManager
                             $action->halt();
                         }
                     })
-                    ->after(function ($record) {
+                    ->after(function ($record, WalletService $walletService) {
+                        $walletService->addAmount($record->paidTo->wallet, $record->amount);
                         $promotion = ClientPromotion::where([
                             'client_id' => $this->ownerRecord->id,
                             'promotion_id' => $record->promotion_id,
@@ -102,8 +104,10 @@ class ProfitsRelationManager extends RelationManager
             ])
             ->actions([
                 Tables\Actions\EditAction::make()
-                    ->before(function ($action, $record, $data) {
+                    ->before(function ($action, $record, $data, WalletService $walletService) {
                         if ($record->amount != $data['amount']) {
+                            $walletService->subAmount($record->paidTo->wallet, $record->amount);
+                            $walletService->addAmount($record->paidTo->wallet, $data['amount']);
                             $promotion = ClientPromotion::where([
                                 'client_id' => $this->ownerRecord->id,
                                 'promotion_id' => $record->promotion_id,
@@ -135,7 +139,8 @@ class ProfitsRelationManager extends RelationManager
                         }
                     }),
                 Tables\Actions\DeleteAction::make()
-                    ->after(function ($record) {
+                    ->after(function ($record, WalletService $walletService) {
+                        $walletService->subAmount($record->paidTo->wallet, $record->amount);
                         $promotion = ClientPromotion::where([
                             'client_id' => $this->ownerRecord->id,
                             'promotion_id' => $record->promotion_id,
@@ -146,11 +151,6 @@ class ProfitsRelationManager extends RelationManager
                         }
                         $promotion->save();
                     }),
-            ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
             ]);
     }
 }
