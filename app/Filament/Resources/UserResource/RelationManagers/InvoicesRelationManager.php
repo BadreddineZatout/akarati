@@ -39,6 +39,9 @@ class InvoicesRelationManager extends RelationManager
                     ->label('#'),
                 Tables\Columns\TextColumn::make('project.name')
                     ->searchable(),
+                Tables\Columns\TextColumn::make('promotion.fullname')
+                    ->default('---')
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('amount')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('invoiced_at')

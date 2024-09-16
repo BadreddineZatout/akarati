@@ -51,6 +51,9 @@ class SupplierInvoicesRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('id')
             ->columns([
+                Tables\Columns\TextColumn::make('promotion.fullname')
+                    ->default('---')
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('invoicable.name')
                     ->label('receiver'),
                 Tables\Columns\TextColumn::make('amount')

@@ -42,6 +42,9 @@ class BillsRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('id')
             ->columns([
+                Tables\Columns\TextColumn::make('promotion.fullname')
+                    ->default('---')
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('amount')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('invoiced_at')

@@ -2,17 +2,20 @@
 
 namespace App\Filament\Resources;
 
-use App\Enums\PromotionStateEnum;
-use App\Filament\Resources\PromotionResource\Pages;
-use App\Models\Promotion;
-use App\Models\PromotionType;
 use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Resources\Resource;
 use Filament\Tables;
-use Filament\Tables\Actions\Action;
+use Filament\Forms\Form;
+use App\Models\Promotion;
 use Filament\Tables\Table;
+use App\Models\PromotionType;
+use Filament\Resources\Resource;
+use App\Enums\PromotionStateEnum;
+use Filament\Tables\Actions\Action;
 use Illuminate\Database\Eloquent\Builder;
+use App\Filament\Resources\PromotionResource\Pages;
+use App\Filament\Resources\PromotionResource\RelationManagers\BillsRelationManager;
+use App\Filament\Resources\PromotionResource\RelationManagers\InvoicesRelationManager;
+use App\Filament\Resources\PromotionResource\RelationManagers\SupplierInvoicesRelationManager;
 
 class PromotionResource extends Resource
 {
@@ -88,7 +91,9 @@ class PromotionResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            InvoicesRelationManager::class,
+            SupplierInvoicesRelationManager::class,
+            BillsRelationManager::class,
         ];
     }
 

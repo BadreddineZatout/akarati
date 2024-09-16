@@ -1,36 +1,33 @@
 <?php
 
-namespace App\Filament\Resources\ProjectResource\RelationManagers;
+namespace App\Filament\Resources\PromotionResource\RelationManagers;
 
-use Filament\Forms;
-use App\Models\User;
-use Filament\Tables;
-use App\Models\Invoice;
-use Filament\Forms\Form;
-use Filament\Tables\Table;
 use App\Enums\InvoiceTypeEnum;
-use App\Services\WalletService;
+use App\Models\Invoice;
+use App\Models\Supplier;
 use App\Services\InvoiceService;
-use Illuminate\Database\Eloquent\Model;
-use Filament\Notifications\Notification;
-use Filament\Tables\Actions\CreateAction;
-use Illuminate\Database\Eloquent\Builder;
+use Filament\Forms;
 use Filament\Forms\Components\MorphToSelect;
+use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Tables;
+use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 
-class InvoicesRelationManager extends RelationManager
+class SupplierInvoicesRelationManager extends RelationManager
 {
-    protected static string $relationship = 'invoices';
+    protected static string $relationship = 'supplier_invoices';
 
     public function form(Form $form): Form
     {
         return $form
             ->schema([
                 Forms\Components\MorphToSelect::make('invoicable')
-                    ->label('User')
+                    ->label('receiver')
                     ->types([
-                        MorphToSelect\Type::make(User::class)
-                            ->titleAttribute('name'),
+                        MorphToSelect\Type::make(Supplier::class)
+                            ->titleAttribute('id')
+                            ->getOptionLabelFromRecordUsing(fn (Supplier $record): string => "{$record->first_name} - {$record->last_name}"),
                     ])
                     ->required()
                     ->columnSpanFull(),
@@ -53,16 +50,9 @@ class InvoicesRelationManager extends RelationManager
     {
         return $table
             ->recordTitleAttribute('id')
-            ->modifyQueryUsing(fn (Builder $query) => $query->where('type', InvoiceTypeEnum::PROJECT->value))
             ->columns([
-                Tables\Columns\TextColumn::make('promotion.fullname')
-                    ->default('---')
-                    ->searchable(),
                 Tables\Columns\TextColumn::make('invoicable.name')
-                    ->searchable()
-                    ->label('User'),
-                Tables\Columns\TextColumn::make('invoicable.roles.name')
-                    ->label('role'),
+                    ->label('receiver'),
                 Tables\Columns\TextColumn::make('amount')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('invoiced_at')
@@ -73,23 +63,12 @@ class InvoicesRelationManager extends RelationManager
             ->headerActions([
                 Tables\Actions\CreateAction::make()
                     ->mutateFormDataUsing(function (array $data): array {
-                        $data['type'] = InvoiceTypeEnum::PROJECT->value;
+                        $data['project_id'] = $this->ownerRecord->block->project_id;
+                        $data['type'] = InvoiceTypeEnum::SUPPLIER->value;
                         $data['amount'] = 0;
 
                         return $data;
-                    })->before(function(CreateAction $action, $data): void{
-                        $amount = array_sum(array_map(fn($item) => $item['price'],$data['items']));
-                        $wallet = User::find($data['invoicable_id'])->wallet;
-                        if (!$wallet || !$wallet->hasEnoughBalance($amount)) {
-                            Notification::make()
-                                ->danger()
-                                ->title('You don\'t have enough balance!')
-                                ->send();
-
-                            $action->halt();
-                        }
-                    })
-                    ->using(function (array $data, string $model, WalletService $walletService): Model {
+                    })->using(function (array $data, string $model): Model {
                         $items = $data['items'];
                         unset($data['items']);
                         $invoice = $this->ownerRecord->invoices()->create($data);
@@ -97,8 +76,6 @@ class InvoicesRelationManager extends RelationManager
                             $item = $invoice->items()->create($item);
                             $invoice->increment('amount', $item->price);
                         }
-
-                        $walletService->subAmount($invoice->invoicable->wallet, $invoice->amount);
 
                         return $invoice;
                     }),
@@ -109,14 +86,14 @@ class InvoicesRelationManager extends RelationManager
                     ->color('success')
                     ->requiresConfirmation()
                     ->action(function (Invoice $record, InvoiceService $invoiceService) {
-                        return $invoiceService->downloadInvoice($record);
+                        return $invoiceService->downloadSupplierInvoice($record);
                     }),
                 Tables\Actions\EditAction::make()
                     ->mutateRecordDataUsing(function (array $data, $record): array {
                         $data['items'] = $record->items->map(fn ($item) => ['name' => $item->name, 'price' => $item->price]);
 
                         return $data;
-                    })->using(function (Model $record, array $data, WalletService $walletService): Model {
+                    })->using(function (Model $record, array $data): Model {
                         $items = $data['items'];
                         unset($data['items']);
                         $record->update($data);
@@ -129,14 +106,14 @@ class InvoicesRelationManager extends RelationManager
                             $record->increment('amount', $item->price);
                         }
 
-                        $walletService->subAmount($record->invoicable->wallet, $record->amount);
-
                         return $record;
                     }),
-                Tables\Actions\DeleteAction::make()
-                ->after(function ($record, WalletService $walletService){
-                    $walletService->addAmount($record->invoicable->wallet, $record->amount);
-                }),
+                Tables\Actions\DeleteAction::make(),
+            ])
+            ->bulkActions([
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make(),
+                ]),
             ]);
     }
 }

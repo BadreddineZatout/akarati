@@ -2,10 +2,11 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Promotion extends Model
@@ -34,5 +35,20 @@ class Promotion extends Model
     public function clients(): BelongsToMany
     {
         return $this->belongsToMany(Client::class, 'client_promotions');
+    }
+
+    public function invoices(): HasMany
+    {
+        return $this->hasMany(Invoice::class);
+    }
+
+    public function supplier_invoices(): HasMany
+    {
+        return $this->hasMany(Invoice::class)->whereHasMorph('invoicable', Supplier::class);
+    }
+
+    public function bills(): HasMany
+    {
+        return $this->hasMany(Invoice::class)->whereNull('invoicable_id');
     }
 }

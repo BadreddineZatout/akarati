@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\ProjectResource\RelationManagers;
+namespace App\Filament\Resources\PromotionResource\RelationManagers;
 
 use Filament\Forms;
 use App\Models\User;
@@ -55,9 +55,6 @@ class InvoicesRelationManager extends RelationManager
             ->recordTitleAttribute('id')
             ->modifyQueryUsing(fn (Builder $query) => $query->where('type', InvoiceTypeEnum::PROJECT->value))
             ->columns([
-                Tables\Columns\TextColumn::make('promotion.fullname')
-                    ->default('---')
-                    ->searchable(),
                 Tables\Columns\TextColumn::make('invoicable.name')
                     ->searchable()
                     ->label('User'),
@@ -73,6 +70,7 @@ class InvoicesRelationManager extends RelationManager
             ->headerActions([
                 Tables\Actions\CreateAction::make()
                     ->mutateFormDataUsing(function (array $data): array {
+                        $data['project_id'] = $this->ownerRecord->block->project_id;
                         $data['type'] = InvoiceTypeEnum::PROJECT->value;
                         $data['amount'] = 0;
 
