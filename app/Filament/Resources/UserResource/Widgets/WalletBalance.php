@@ -12,12 +12,20 @@ class WalletBalance extends BaseWidget
 
     protected function getStats(): array
     {
-        if ($this->record->wallet) {
-            return [
-                Stat::make('Current Balance', $this->record->wallet?->balance),
-            ];
+        if ($this->record) {
+            if ($this->record->wallet) {
+                return [
+                    Stat::make('Current Balance', $this->record->wallet?->balance),
+                ];
+            }
+
+            return [];
         }
 
-        return [];
+        if (auth()->user()->wallet) {
+            return [
+                Stat::make('Current Balance', auth()->user()->wallet?->balance),
+            ];
+        }
     }
 }
