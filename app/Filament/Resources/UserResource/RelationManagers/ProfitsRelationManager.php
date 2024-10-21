@@ -35,6 +35,7 @@ class ProfitsRelationManager extends RelationManager
             ->columns([
                 Tables\Columns\TextColumn::make('id')
                     ->label('#'),
+                Tables\Columns\TextColumn::make('client.fullname'),
                 Tables\Columns\TextColumn::make('promotion.fullname'),
                 Tables\Columns\TextColumn::make('amount'),
                 Tables\Columns\TextColumn::make('paid_at')
