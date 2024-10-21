@@ -10,10 +10,8 @@ use App\Services\WalletService;
 use Filament\Forms;
 use Filament\Forms\Components\MorphToSelect;
 use Filament\Forms\Form;
-use Filament\Notifications\Notification;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
-use Filament\Tables\Actions\CreateAction;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -78,17 +76,6 @@ class InvoicesRelationManager extends RelationManager
                         $data['amount'] = 0;
 
                         return $data;
-                    })->before(function (CreateAction $action, $data): void {
-                        $amount = array_sum(array_map(fn ($item) => $item['price'], $data['items']));
-                        $wallet = User::find($data['invoicable_id'])->wallet;
-                        if (! $wallet || ! $wallet->hasEnoughBalance($amount)) {
-                            Notification::make()
-                                ->danger()
-                                ->title('You don\'t have enough balance!')
-                                ->send();
-
-                            $action->halt();
-                        }
                     })
                     ->using(function (array $data, string $model, WalletService $walletService): Model {
                         $items = $data['items'];

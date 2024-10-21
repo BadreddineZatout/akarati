@@ -2,17 +2,16 @@
 
 namespace App\Filament\Resources\EmployeeResource\RelationManagers;
 
-use Filament\Forms;
-use Filament\Tables;
-use Filament\Forms\Form;
-use Filament\Tables\Table;
-use App\Services\WalletService;
 use App\Enums\PaymentStatusEnum;
 use App\Models\Payment;
-use Filament\Tables\Actions\Action;
+use App\Services\WalletService;
+use Filament\Forms;
+use Filament\Forms\Form;
 use Filament\Notifications\Notification;
-use Filament\Tables\Actions\CreateAction;
 use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Tables;
+use Filament\Tables\Actions\Action;
+use Filament\Tables\Table;
 
 class PaymentsRelationManager extends RelationManager
 {
@@ -57,23 +56,12 @@ class PaymentsRelationManager extends RelationManager
             ->headerActions([
                 Tables\Actions\CreateAction::make()
                     ->visible(auth()->user()->can('add_payment_employee'))
-                    ->before(function (CreateAction $action, $data) {
-                        $wallet = auth()->user()->wallet;
-                        if (! $wallet || $wallet->hasEnoughBalance($data['amount'])) {
-                            Notification::make()
-                                ->danger()
-                                ->title('You don\'t have enough balance!')
-                                ->send();
-
-                            $action->halt();
-                        }
-                    })
                     ->mutateFormDataUsing(function (array $data): array {
                         $data['paid_by'] = auth()->id();
                         $data['status'] = PaymentStatusEnum::NOT_PAID->value;
 
                         return $data;
-                    })->after(function(Payment $record, WalletService $walletService){
+                    })->after(function (Payment $record, WalletService $walletService) {
                         $walletService->subAmount(auth()->user()->wallet, $record->amount);
                     }),
             ])
@@ -95,7 +83,7 @@ class PaymentsRelationManager extends RelationManager
                     }),
                 Tables\Actions\DeleteAction::make()
                     ->visible(fn () => auth()->user()->can('remove_payment_employee'))
-                    ->before(function(Payment $record, WalletService $walletService){
+                    ->before(function (Payment $record, WalletService $walletService) {
                         $walletService->addAmount(auth()->user()->wallet, $record->amount);
                     }),
             ]);
