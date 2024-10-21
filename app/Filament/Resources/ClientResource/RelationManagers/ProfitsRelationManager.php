@@ -7,6 +7,7 @@ use App\Models\ClientPromotion;
 use App\Models\User;
 use App\Services\WalletService;
 use Filament\Forms;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
 use Filament\Notifications\Notification;
@@ -49,6 +50,8 @@ class ProfitsRelationManager extends RelationManager
                 Forms\Components\TextInput::make('amount')
                     ->required()
                     ->numeric(),
+                SpatieMediaLibraryFileUpload::make('images')
+                    ->multiple(),
             ]);
     }
 

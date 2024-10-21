@@ -6,6 +6,7 @@ use App\Enums\InvoiceTypeEnum;
 use App\Models\Invoice;
 use App\Services\InvoiceService;
 use Filament\Forms;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
@@ -34,6 +35,8 @@ class BillsRelationManager extends RelationManager
                     ])
                     ->columns(2)
                     ->columnSpanFull(),
+                SpatieMediaLibraryFileUpload::make('images')
+                    ->multiple(),
             ]);
     }
 

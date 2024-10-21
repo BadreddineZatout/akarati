@@ -6,6 +6,7 @@ use App\Enums\PaymentStatusEnum;
 use App\Models\Payment;
 use App\Services\WalletService;
 use Filament\Forms;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Resources\RelationManagers\RelationManager;
@@ -32,6 +33,8 @@ class PaymentsRelationManager extends RelationManager
                 Forms\Components\DatePicker::make('paid_at')
                     ->required(),
                 Forms\Components\Textarea::make('description'),
+                SpatieMediaLibraryFileUpload::make('images')
+                    ->multiple(),
 
             ]);
     }

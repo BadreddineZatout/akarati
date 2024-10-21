@@ -8,6 +8,7 @@ use App\Models\Supplier;
 use App\Services\InvoiceService;
 use Filament\Forms;
 use Filament\Forms\Components\MorphToSelect;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
@@ -82,6 +83,8 @@ class SupplierInvoicesRelationManager extends RelationManager
 
                         return $invoice;
                     }),
+                SpatieMediaLibraryFileUpload::make('images')
+                    ->multiple(),
             ])
             ->actions([
                 Tables\Actions\Action::make('Generate')

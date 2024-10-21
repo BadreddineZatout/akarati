@@ -9,6 +9,7 @@ use App\Services\InvoiceService;
 use App\Services\WalletService;
 use Filament\Forms;
 use Filament\Forms\Components\MorphToSelect;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Resources\RelationManagers\RelationManager;
@@ -46,6 +47,8 @@ class InvoicesRelationManager extends RelationManager
                     ])
                     ->columns(2)
                     ->columnSpanFull(),
+                SpatieMediaLibraryFileUpload::make('images')
+                    ->multiple(),
             ]);
     }
 
