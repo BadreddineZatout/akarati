@@ -3,28 +3,38 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\SettingResource\Pages;
-use App\Filament\Resources\SettingResource\RelationManagers;
 use App\Models\Setting;
+use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class SettingResource extends Resource
+class SettingResource extends Resource implements HasShieldPermissions
 {
     protected static ?string $model = Setting::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-cog';
+
+    public static function getPermissionPrefixes(): array
+    {
+        return [
+            'view',
+            'view_any',
+            'create',
+            'update',
+            'delete',
+            'delete_any',
+        ];
+    }
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 Forms\Components\TextInput::make('key')->required(),
-                Forms\Components\Textarea::make('value')->required()
+                Forms\Components\Textarea::make('value')->required(),
             ]);
     }
 
@@ -61,8 +71,8 @@ class SettingResource extends Resource
     {
         return [
             'index' => Pages\ListSettings::route('/'),
-//            'create' => Pages\CreateSetting::route('/create'),
-//            'edit' => Pages\EditSetting::route('/{record}/edit'),
+            //            'create' => Pages\CreateSetting::route('/create'),
+            //            'edit' => Pages\EditSetting::route('/{record}/edit'),
         ];
     }
 }

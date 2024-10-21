@@ -2,21 +2,21 @@
 
 namespace App\Filament\Resources\ProjectResource\RelationManagers;
 
-use Filament\Forms;
-use App\Models\User;
-use Filament\Tables;
-use App\Models\Invoice;
-use Filament\Forms\Form;
-use Filament\Tables\Table;
 use App\Enums\InvoiceTypeEnum;
-use App\Services\WalletService;
+use App\Models\Invoice;
+use App\Models\User;
 use App\Services\InvoiceService;
-use Illuminate\Database\Eloquent\Model;
-use Filament\Notifications\Notification;
-use Filament\Tables\Actions\CreateAction;
-use Illuminate\Database\Eloquent\Builder;
+use App\Services\WalletService;
+use Filament\Forms;
 use Filament\Forms\Components\MorphToSelect;
+use Filament\Forms\Form;
+use Filament\Notifications\Notification;
 use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Tables;
+use Filament\Tables\Actions\CreateAction;
+use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 
 class InvoicesRelationManager extends RelationManager
 {
@@ -72,15 +72,16 @@ class InvoicesRelationManager extends RelationManager
             ])
             ->headerActions([
                 Tables\Actions\CreateAction::make()
+                    ->visible(auth()->user()->can('add_invoice_project'))
                     ->mutateFormDataUsing(function (array $data): array {
                         $data['type'] = InvoiceTypeEnum::PROJECT->value;
                         $data['amount'] = 0;
 
                         return $data;
-                    })->before(function(CreateAction $action, $data): void{
-                        $amount = array_sum(array_map(fn($item) => $item['price'],$data['items']));
+                    })->before(function (CreateAction $action, $data): void {
+                        $amount = array_sum(array_map(fn ($item) => $item['price'], $data['items']));
                         $wallet = User::find($data['invoicable_id'])->wallet;
-                        if (!$wallet || !$wallet->hasEnoughBalance($amount)) {
+                        if (! $wallet || ! $wallet->hasEnoughBalance($amount)) {
                             Notification::make()
                                 ->danger()
                                 ->title('You don\'t have enough balance!')
@@ -105,6 +106,7 @@ class InvoicesRelationManager extends RelationManager
             ])
             ->actions([
                 Tables\Actions\Action::make('Generate')
+                    ->visible(auth()->user()->can('generate_invoice_project'))
                     ->icon('heroicon-o-inbox-arrow-down')
                     ->color('success')
                     ->requiresConfirmation()
@@ -112,6 +114,7 @@ class InvoicesRelationManager extends RelationManager
                         return $invoiceService->downloadInvoice($record);
                     }),
                 Tables\Actions\EditAction::make()
+                    ->visible(auth()->user()->can('edit_invoice_project'))
                     ->mutateRecordDataUsing(function (array $data, $record): array {
                         $data['items'] = $record->items->map(fn ($item) => ['name' => $item->name, 'price' => $item->price]);
 
@@ -134,9 +137,10 @@ class InvoicesRelationManager extends RelationManager
                         return $record;
                     }),
                 Tables\Actions\DeleteAction::make()
-                ->after(function ($record, WalletService $walletService){
-                    $walletService->addAmount($record->invoicable->wallet, $record->amount);
-                }),
+                    ->visible(auth()->user()->can('delete_invoice_project'))
+                    ->after(function ($record, WalletService $walletService) {
+                        $walletService->addAmount($record->invoicable->wallet, $record->amount);
+                    }),
             ]);
     }
 }

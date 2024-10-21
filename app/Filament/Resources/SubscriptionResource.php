@@ -6,6 +6,7 @@ use App\Enums\SubscriptionStateEnum;
 use App\Filament\Resources\SubscriptionResource\Pages;
 use App\Models\Subscription;
 use App\Models\User;
+use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
@@ -14,11 +15,23 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Laravelcm\Subscriptions\Models\Plan;
 
-class SubscriptionResource extends Resource
+class SubscriptionResource extends Resource implements HasShieldPermissions
 {
     protected static ?string $model = Subscription::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-shopping-bag';
+
+    public static function getPermissionPrefixes(): array
+    {
+        return [
+            'view',
+            'view_any',
+            'create',
+            'update',
+            'delete',
+            'delete_any',
+        ];
+    }
 
     public static function form(Form $form): Form
     {

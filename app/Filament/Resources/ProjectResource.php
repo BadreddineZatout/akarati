@@ -10,17 +10,34 @@ use App\Filament\Resources\ProjectResource\RelationManagers\InvoicesRelationMana
 use App\Filament\Resources\ProjectResource\RelationManagers\SupplierInvoicesRelationManager;
 use App\Models\Project;
 use App\Models\User;
+use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 
-class ProjectResource extends Resource
+class ProjectResource extends Resource implements HasShieldPermissions
 {
     protected static ?string $model = Project::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-clipboard-document-list';
+
+    public static function getPermissionPrefixes(): array
+    {
+        return [
+            'view',
+            'view_any',
+            'create',
+            'update',
+            'delete',
+            'delete_any',
+            'add_invoice',
+            'edit_invoice',
+            'delete_invoice',
+            'generate_invoice',
+        ];
+    }
 
     public static function form(Form $form): Form
     {

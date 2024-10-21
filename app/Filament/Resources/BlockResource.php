@@ -2,20 +2,33 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\BlockResource\Pages;
+use Filament\Tables;
 use App\Models\Block;
 use Filament\Forms\Form;
-use Filament\Resources\Resource;
-use Filament\Tables;
 use Filament\Tables\Table;
+use Filament\Resources\Resource;
+use App\Filament\Resources\BlockResource\Pages;
+use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
 
-class BlockResource extends Resource
+class BlockResource extends Resource implements HasShieldPermissions
 {
     protected static ?string $model = Block::class;
 
     protected static bool $shouldRegisterNavigation = false;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+
+    public static function getPermissionPrefixes(): array
+    {
+        return [
+            'view',
+            'view_any',
+            'create',
+            'update',
+            'delete',
+            'delete_any',
+        ];
+    }
 
     public static function form(Form $form): Form
     {

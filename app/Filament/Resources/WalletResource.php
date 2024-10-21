@@ -4,14 +4,27 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\WalletResource\Pages;
 use App\Models\Wallet;
+use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 
-class WalletResource extends Resource
+class WalletResource extends Resource implements HasShieldPermissions
 {
     protected static ?string $model = Wallet::class;
+
+    public static function getPermissionPrefixes(): array
+    {
+        return [
+            'view',
+            'view_any',
+            'create',
+            'update',
+            'delete',
+            'delete_any',
+        ];
+    }
 
     public static function canCreate(): bool
     {

@@ -52,6 +52,7 @@ class BillsRelationManager extends RelationManager
             ])
             ->headerActions([
                 Tables\Actions\CreateAction::make()
+                    ->visible(auth()->user()->can('add_invoice_promotion'))
                     ->mutateFormDataUsing(function (array $data): array {
                         $data['project_id'] = $this->ownerRecord->block->project_id;
                         $data['type'] = InvoiceTypeEnum::BILL->value;
@@ -72,6 +73,7 @@ class BillsRelationManager extends RelationManager
             ])
             ->actions([
                 Tables\Actions\Action::make('Generate')
+                    ->visible(auth()->user()->can('generate_invoice_promotion'))
                     ->icon('heroicon-o-inbox-arrow-down')
                     ->color('success')
                     ->requiresConfirmation()
@@ -79,6 +81,7 @@ class BillsRelationManager extends RelationManager
                         return $invoiceService->downloadBill($record);
                     }),
                 Tables\Actions\EditAction::make()
+                    ->visible(auth()->user()->can('edit_invoice_promotion'))
                     ->mutateRecordDataUsing(function (array $data, $record): array {
                         $data['items'] = $record->items->map(fn ($item) => ['name' => $item->name, 'price' => $item->price]);
 
@@ -98,7 +101,8 @@ class BillsRelationManager extends RelationManager
 
                         return $record;
                     }),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\DeleteAction::make()
+                    ->visible(auth()->user()->can('delete_invoice_promotion')),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

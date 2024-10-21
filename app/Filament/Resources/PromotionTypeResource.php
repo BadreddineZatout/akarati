@@ -5,17 +5,30 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\PromotionTypeResource\Pages;
 use App\Filament\Resources\PromotionTypeResource\RelationManagers;
 use App\Models\PromotionType;
+use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 
-class PromotionTypeResource extends Resource
+class PromotionTypeResource extends Resource implements HasShieldPermissions
 {
     protected static ?string $model = PromotionType::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-building-office';
+
+    public static function getPermissionPrefixes(): array
+    {
+        return [
+            'view',
+            'view_any',
+            'create',
+            'update',
+            'delete',
+            'delete_any',
+        ];
+    }
 
     public static function form(Form $form): Form
     {

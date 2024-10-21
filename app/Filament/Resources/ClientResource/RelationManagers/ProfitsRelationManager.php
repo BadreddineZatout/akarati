@@ -2,19 +2,19 @@
 
 namespace App\Filament\Resources\ClientResource\RelationManagers;
 
-use Filament\Forms;
-use App\Models\User;
-use Filament\Tables;
-use Filament\Forms\Get;
-use Filament\Forms\Form;
-use Filament\Tables\Table;
 use App\Enums\ProfitStateEnum;
 use App\Models\ClientPromotion;
+use App\Models\User;
 use App\Services\WalletService;
-use Spatie\Permission\Models\Role;
+use Filament\Forms;
+use Filament\Forms\Form;
+use Filament\Forms\Get;
 use Filament\Notifications\Notification;
-use Filament\Tables\Filters\SelectFilter;
 use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Tables;
+use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Table;
+use Spatie\Permission\Models\Role;
 
 class ProfitsRelationManager extends RelationManager
 {
@@ -72,6 +72,7 @@ class ProfitsRelationManager extends RelationManager
             ])
             ->headerActions([
                 Tables\Actions\CreateAction::make()
+                    ->visible(auth()->user()->can('add_profit_client'))
                     ->before(function ($action, $data) {
                         $promotion = ClientPromotion::where([
                             'client_id' => $this->ownerRecord->id,
@@ -104,6 +105,7 @@ class ProfitsRelationManager extends RelationManager
             ])
             ->actions([
                 Tables\Actions\EditAction::make()
+                    ->visible(auth()->user()->can('edit_profit_client'))
                     ->before(function ($action, $record, $data, WalletService $walletService) {
                         if ($record->amount != $data['amount']) {
                             $walletService->subAmount($record->paidTo->wallet, $record->amount);
@@ -139,6 +141,7 @@ class ProfitsRelationManager extends RelationManager
                         }
                     }),
                 Tables\Actions\DeleteAction::make()
+                    ->visible(auth()->user()->can('delete_profit_client'))
                     ->after(function ($record, WalletService $walletService) {
                         $walletService->subAmount($record->paidTo->wallet, $record->amount);
                         $promotion = ClientPromotion::where([

@@ -2,22 +2,23 @@
 
 namespace App\Filament\Resources;
 
-use Filament\Forms;
-use Filament\Tables;
-use Filament\Forms\Form;
-use App\Models\Promotion;
-use Filament\Tables\Table;
-use App\Models\PromotionType;
-use Filament\Resources\Resource;
 use App\Enums\PromotionStateEnum;
-use Filament\Tables\Actions\Action;
-use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\PromotionResource\Pages;
 use App\Filament\Resources\PromotionResource\RelationManagers\BillsRelationManager;
 use App\Filament\Resources\PromotionResource\RelationManagers\InvoicesRelationManager;
 use App\Filament\Resources\PromotionResource\RelationManagers\SupplierInvoicesRelationManager;
+use App\Models\Promotion;
+use App\Models\PromotionType;
+use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
+use Filament\Forms;
+use Filament\Forms\Form;
+use Filament\Resources\Resource;
+use Filament\Tables;
+use Filament\Tables\Actions\Action;
+use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
-class PromotionResource extends Resource
+class PromotionResource extends Resource implements HasShieldPermissions
 {
     protected static ?string $slug = 'blocks/promotions';
 
@@ -26,6 +27,22 @@ class PromotionResource extends Resource
     protected static bool $shouldRegisterNavigation = false;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+
+    public static function getPermissionPrefixes(): array
+    {
+        return [
+            'view',
+            'view_any',
+            'create',
+            'update',
+            'delete',
+            'delete_any',
+            'add_invoice',
+            'edit_invoice',
+            'delete_invoice',
+            'generate_invoice',
+        ];
+    }
 
     public static function form(Form $form): Form
     {

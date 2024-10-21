@@ -65,6 +65,7 @@ class SupplierInvoicesRelationManager extends RelationManager
             ])
             ->headerActions([
                 Tables\Actions\CreateAction::make()
+                    ->visible(auth()->user()->can('add_invoice_project'))
                     ->mutateFormDataUsing(function (array $data): array {
                         $data['type'] = InvoiceTypeEnum::SUPPLIER->value;
                         $data['amount'] = 0;
@@ -84,6 +85,7 @@ class SupplierInvoicesRelationManager extends RelationManager
             ])
             ->actions([
                 Tables\Actions\Action::make('Generate')
+                    ->visible(auth()->user()->can('generate_invoice_project'))
                     ->icon('heroicon-o-inbox-arrow-down')
                     ->color('success')
                     ->requiresConfirmation()
@@ -91,6 +93,7 @@ class SupplierInvoicesRelationManager extends RelationManager
                         return $invoiceService->downloadSupplierInvoice($record);
                     }),
                 Tables\Actions\EditAction::make()
+                    ->visible(auth()->user()->can('edit_invoice_project'))
                     ->mutateRecordDataUsing(function (array $data, $record): array {
                         $data['items'] = $record->items->map(fn ($item) => ['name' => $item->name, 'price' => $item->price]);
 
@@ -110,7 +113,8 @@ class SupplierInvoicesRelationManager extends RelationManager
 
                         return $record;
                     }),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\DeleteAction::make()
+                    ->visible(auth()->user()->can('delete_invoice_project')),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
