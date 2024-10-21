@@ -57,13 +57,13 @@ class ProjectResource extends Resource implements HasShieldPermissions
                     ->label(__('Promoter'))
                     ->relationship('promoter', 'name')
                     ->getOptionLabelUsing(fn ($value) => User::find($value)?->name)
-                    ->options(User::role('promoter')->pluck('name', 'id')->toArray())
+                    ->options(User::role('promoteur')->pluck('name', 'id')->toArray())
                     ->required(),
                 Forms\Components\Select::make('accountant_id')
                     ->label(__('Accountant'))
                     ->relationship('accountant', 'name')
                     ->getOptionLabelUsing(fn ($value) => User::find($value)?->name)
-                    ->options(User::role('Accountant')->pluck('name', 'id')->toArray())
+                    ->options(User::role('comptable')->pluck('name', 'id')->toArray())
                     ->required(),
                 Forms\Components\DatePicker::make('started_at'),
                 Forms\Components\DatePicker::make('ended_at'),
