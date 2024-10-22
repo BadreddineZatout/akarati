@@ -7,6 +7,7 @@ use App\Models\Payment;
 use App\Services\WalletService;
 use Filament\Forms;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Resources\RelationManagers\RelationManager;
@@ -46,7 +47,10 @@ class PaymentsRelationManager extends RelationManager
             ->columns([
                 Tables\Columns\TextColumn::make('paidBy.name'),
                 Tables\Columns\TextColumn::make('project.name'),
-                Tables\Columns\TextColumn::make('amount'),
+                Tables\Columns\TextColumn::make('amount')->suffix(' DA'),
+                Tables\Columns\TextColumn::make('reste')
+                    ->getStateusing(fn ($record) => $record->amount - $record->paid_amount)
+                    ->suffix(' DA'),
                 Tables\Columns\TextColumn::make('paid_at')
                     ->date('d-m-Y'),
                 Tables\Columns\TextColumn::make('status')
@@ -70,13 +74,30 @@ class PaymentsRelationManager extends RelationManager
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
-                Action::make('Paid')
+                Action::make('Pay')
                     ->color('success')
                     ->icon('heroicon-o-check')
                     ->requiresConfirmation()
                     ->visible(fn ($record) => ($record->status != PaymentStatusEnum::PAID) && auth()->user()->can('mark_payment_as_paid_employee'))
-                    ->action(function ($record) {
-                        $record->status = PaymentStatusEnum::PAID->value;
+                    ->form([
+                        TextInput::make('amount')
+                            ->label('Amount')
+                            ->numeric()
+                            ->minValue(0)
+                            ->required(),
+                    ])
+                    ->action(function ($data, $record) {
+                        if ($record->amount < $data['amount'] + $record->paid_amount) {
+                            return Notification::make()
+                                ->title('This amount is more than the owned amount.')
+                                ->danger()
+                                ->send();
+                        }
+                        $record->increment('paid_amount', $data['amount']);
+                        $record->paid_at = now();
+                        if ($record->amount == $record->paid_amount) {
+                            $record->status = PaymentStatusEnum::PAID->value;
+                        }
                         $record->save();
 
                         return Notification::make()
