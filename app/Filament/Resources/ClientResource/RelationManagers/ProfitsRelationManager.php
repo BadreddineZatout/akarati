@@ -84,7 +84,7 @@ class ProfitsRelationManager extends RelationManager
                         if ($data['amount'] > $promotion->rest) {
                             Notification::make()
                                 ->danger()
-                                ->title('The amount is more than the rest of payment')
+                                ->title('The amount is more than the rest of payment.')
                                 ->send();
 
                             $action->halt();

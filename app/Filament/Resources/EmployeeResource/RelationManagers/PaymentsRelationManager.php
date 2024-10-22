@@ -89,7 +89,7 @@ class PaymentsRelationManager extends RelationManager
                     ->action(function ($data, $record) {
                         if ($record->amount < $data['amount'] + $record->paid_amount) {
                             return Notification::make()
-                                ->title('This amount is more than the owned amount.')
+                                ->title('The amount is more than the rest of payment.')
                                 ->danger()
                                 ->send();
                         }

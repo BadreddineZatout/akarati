@@ -36,6 +36,7 @@ class ProjectResource extends Resource implements HasShieldPermissions
             'edit_invoice',
             'delete_invoice',
             'generate_invoice',
+            'pay_invoice',
         ];
     }
 
