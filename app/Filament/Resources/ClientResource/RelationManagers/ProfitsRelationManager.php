@@ -3,9 +3,12 @@
 namespace App\Filament\Resources\ClientResource\RelationManagers;
 
 use App\Enums\ProfitStateEnum;
+use App\Filament\Exports\ProfitExporter;
+use App\Filament\Exports\UserProfitExporter;
 use App\Models\ClientPromotion;
 use App\Models\User;
 use App\Services\WalletService;
+use Filament\Actions\Exports\Enums\ExportFormat;
 use Filament\Forms;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Form;
@@ -13,6 +16,7 @@ use Filament\Forms\Get;
 use Filament\Notifications\Notification;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
+use Filament\Tables\Actions\ExportBulkAction;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Spatie\Permission\Models\Role;
@@ -157,6 +161,10 @@ class ProfitsRelationManager extends RelationManager
                         }
                         $promotion->save();
                     }),
+            ])->bulkActions([
+                ExportBulkAction::make()->exporter(ProfitExporter::class) ->formats([
+                    ExportFormat::Csv,
+                ]),
             ]);
     }
 }

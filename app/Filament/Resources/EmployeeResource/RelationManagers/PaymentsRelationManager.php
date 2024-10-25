@@ -3,8 +3,11 @@
 namespace App\Filament\Resources\EmployeeResource\RelationManagers;
 
 use App\Enums\PaymentStatusEnum;
+use App\Filament\Exports\PaymentExporter;
 use App\Models\Payment;
 use App\Services\WalletService;
+use Filament\Actions\ExportAction;
+use Filament\Actions\Exports\Enums\ExportFormat;
 use Filament\Forms;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TextInput;
@@ -13,6 +16,7 @@ use Filament\Notifications\Notification;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Actions\Action;
+use Filament\Tables\Actions\ExportBulkAction;
 use Filament\Tables\Table;
 
 class PaymentsRelationManager extends RelationManager
@@ -59,6 +63,11 @@ class PaymentsRelationManager extends RelationManager
             ])
             ->filters([
                 //
+            ])
+            ->bulkActions([
+                ExportBulkAction::make()->exporter(PaymentExporter::class) ->formats([
+                    ExportFormat::Csv,
+                ]),
             ])
             ->headerActions([
                 Tables\Actions\CreateAction::make()

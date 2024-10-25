@@ -2,12 +2,15 @@
 
 namespace App\Filament\Resources\SupplierResource\RelationManagers;
 
+use App\Filament\Exports\UserInvoiceExporter;
 use App\Models\Invoice;
 use App\Services\InvoiceService;
+use Filament\Actions\Exports\Enums\ExportFormat;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
+use Filament\Tables\Actions\ExportBulkAction;
 use Filament\Tables\Table;
 
 class InvoicesRelationManager extends RelationManager
@@ -48,6 +51,10 @@ class InvoicesRelationManager extends RelationManager
                     ->action(function (Invoice $record, InvoiceService $invoiceService) {
                         return $invoiceService->downloadSupplierInvoice($record);
                     }),
+            ])->bulkActions([
+                ExportBulkAction::make()->exporter(UserInvoiceExporter::class) ->formats([
+                    ExportFormat::Csv,
+                ]),
             ]);
     }
 }
