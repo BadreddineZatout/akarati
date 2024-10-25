@@ -9,6 +9,7 @@ use App\Filament\Resources\PromotionResource\RelationManagers\InvoicesRelationMa
 use App\Filament\Resources\PromotionResource\RelationManagers\SupplierInvoicesRelationManager;
 use App\Models\Promotion;
 use App\Models\PromotionType;
+use App\Services\InvoiceService;
 use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -97,6 +98,14 @@ class PromotionResource extends Resource implements HasShieldPermissions
                 //                    ->color('primary'),
                 Tables\Actions\EditAction::make(),
                 Pages\CustomDelete::make()->name('custom_delete_action'),
+//                Tables\Actions\Action::make('Generate Invoice')
+//                    ->icon('heroicon-o-inbox-arrow-down')
+//                    ->color('success')
+//                    ->requiresConfirmation()
+//                    ->action(function ( $record, InvoiceService $invoiceService) {
+//                        echo $record;
+////                        return $invoiceService->downloadGlobalPromotionInvoice($record);
+//                    }),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

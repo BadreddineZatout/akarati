@@ -10,6 +10,7 @@ use App\Filament\Resources\ProjectResource\RelationManagers\InvoicesRelationMana
 use App\Filament\Resources\ProjectResource\RelationManagers\SupplierInvoicesRelationManager;
 use App\Models\Project;
 use App\Models\User;
+use App\Services\InvoiceService;
 use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -92,6 +93,13 @@ class ProjectResource extends Resource implements HasShieldPermissions
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\Action::make('Generate Invoice')
+                    ->icon('heroicon-o-inbox-arrow-down')
+                    ->color('success')
+                    ->requiresConfirmation()
+                    ->action(function (Project $record, InvoiceService $invoiceService) {
+                        return $invoiceService->downloadGlobalProjectInvoice($record);
+                    }),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
