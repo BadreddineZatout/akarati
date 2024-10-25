@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\SupplierResource\Pages;
 use App\Filament\Resources\SupplierResource\RelationManagers\InvoicesRelationManager;
 use App\Models\Supplier;
+use App\Services\InvoiceService;
 use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -76,6 +77,13 @@ class SupplierResource extends Resource implements HasShieldPermissions
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
+                Tables\Actions\Action::make('Generate Invoice')
+                    ->icon('heroicon-o-inbox-arrow-down')
+                    ->color('success')
+                    ->requiresConfirmation()
+                    ->action(function (Supplier $record, InvoiceService $invoiceService) {
+                        return $invoiceService->downloadGlobalSupplierInvoice($record);
+                    }),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

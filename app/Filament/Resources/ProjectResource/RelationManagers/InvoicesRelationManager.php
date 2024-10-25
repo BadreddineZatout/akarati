@@ -4,10 +4,12 @@ namespace App\Filament\Resources\ProjectResource\RelationManagers;
 
 use App\Enums\InvoiceTypeEnum;
 use App\Enums\PaymentStatusEnum;
+use App\Filament\Exports\InvoiceExporter;
 use App\Models\Invoice;
 use App\Models\User;
 use App\Services\InvoiceService;
 use App\Services\WalletService;
+use Filament\Actions\Exports\Enums\ExportFormat;
 use Filament\Forms;
 use Filament\Forms\Components\MorphToSelect;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
@@ -17,6 +19,7 @@ use Filament\Notifications\Notification;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Actions\ActionGroup;
+use Filament\Tables\Actions\ExportBulkAction;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -172,6 +175,10 @@ class InvoicesRelationManager extends RelationManager
                         ->after(function ($record, WalletService $walletService) {
                             $walletService->addAmount($record->invoicable->wallet, $record->amount);
                         }),
+                ]),
+            ])->bulkActions([
+                ExportBulkAction::make()->exporter(InvoiceExporter::class) ->formats([
+                    ExportFormat::Csv,
                 ]),
             ]);
     }
