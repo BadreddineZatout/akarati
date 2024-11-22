@@ -2,10 +2,13 @@
 
 namespace App\Filament\Resources\UserResource\RelationManagers;
 
+use App\Filament\Exports\UserProfitExporter;
+use Filament\Actions\Exports\Enums\ExportFormat;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
+use Filament\Tables\Actions\ExportBulkAction;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
 
@@ -41,6 +44,10 @@ class ProfitsRelationManager extends RelationManager
                 Tables\Columns\TextColumn::make('paid_at')
                     ->date('d-m-Y')
                     ->sortable(),
+            ])->bulkActions([
+                ExportBulkAction::make()->exporter(UserProfitExporter::class) ->formats([
+                    ExportFormat::Csv,
+                ]),
             ]);
     }
 }

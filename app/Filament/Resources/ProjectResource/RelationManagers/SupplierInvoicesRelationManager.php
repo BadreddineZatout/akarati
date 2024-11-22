@@ -4,9 +4,11 @@ namespace App\Filament\Resources\ProjectResource\RelationManagers;
 
 use App\Enums\InvoiceTypeEnum;
 use App\Enums\PaymentStatusEnum;
+use App\Filament\Exports\SupplierInvoiceExporter;
 use App\Models\Invoice;
 use App\Models\Supplier;
 use App\Services\InvoiceService;
+use Filament\Actions\Exports\Enums\ExportFormat;
 use Filament\Forms;
 use Filament\Forms\Components\MorphToSelect;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
@@ -16,6 +18,7 @@ use Filament\Notifications\Notification;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Actions\ActionGroup;
+use Filament\Tables\Actions\ExportBulkAction;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
 
@@ -164,6 +167,9 @@ class SupplierInvoicesRelationManager extends RelationManager
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
+                ]),
+                ExportBulkAction::make()->exporter(SupplierInvoiceExporter::class) ->formats([
+                    ExportFormat::Csv,
                 ]),
             ]);
     }
