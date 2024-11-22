@@ -49,6 +49,7 @@ class SupplierInvoicesRelationManager extends RelationManager
                     ->columns(2)
                     ->columnSpanFull(),
                 SpatieMediaLibraryFileUpload::make('images')
+                    ->disk(env('STORAGE_DISK'))
                     ->multiple(),
             ]);
     }

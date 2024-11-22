@@ -18,6 +18,7 @@ use Filament\Tables\Actions\Action;
 use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Validation\Rules\Password;
 
 class UserResource extends Resource implements HasShieldPermissions
@@ -78,7 +79,8 @@ class UserResource extends Resource implements HasShieldPermissions
     {
         return $table
             ->columns([
-                SpatieMediaLibraryImageColumn::make('avatar'),
+                SpatieMediaLibraryImageColumn::make('avatar')
+                    ->disk(env('STORAGE_DISK')),
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('email')
@@ -88,34 +90,13 @@ class UserResource extends Resource implements HasShieldPermissions
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime(),
             ])
+            ->modifyQueryUsing(fn (Builder $query) => auth()->user()->hasRole('super_admin') ? $query : $query->withoutRole('super_admin'))
             ->filters([
-
                 SelectFilter::make('role')
                     ->relationship('roles', 'name'),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
-                //                Action::make('changePassword')
-                //                    ->action(function (User $record, array $data): void {
-                //                        $record->update([
-                //                            'password' => Hash::make($data['new_password']),
-                //                        ]);
-                //
-                //                        Filament::notify('success', 'Password changed successfully.');
-                //                    })
-                //                    ->form([
-                //                        Forms\Components\TextInput::make('new_password')
-                //                            ->password()
-                //                            ->label('New Password')
-                //                            ->required()
-                //                            ->rule(Password::default()),
-                //                        Forms\Components\TextInput::make('new_password_confirmation')
-                //                            ->password()
-                //                            ->label('Confirm New Password')
-                //                            ->rule('required', fn($get) => ! ! $get('new_password'))
-                //                            ->same('new_password'),
-                //                    ])
-                //                    ->icon('heroicon-o-key'),
                 Action::make('deactivate')
                     ->color('danger')
                     ->requiresConfirmation()
@@ -123,10 +104,8 @@ class UserResource extends Resource implements HasShieldPermissions
                     ->action(fn (User $record) => $record->delete()),
             ])
             ->bulkActions([
-
                 Tables\Actions\DeleteBulkAction::make()
                     ->requiresConfirmation(),
-
             ]);
     }
 
@@ -145,9 +124,7 @@ class UserResource extends Resource implements HasShieldPermissions
         return [
             'index' => Pages\ListUsers::route('/'),
             'create' => Pages\CreateUser::route('/create'),
-            //            'edit' => Pages\EditUser::route('/{record}/edit'),
             'view' => Pages\ViewUser::route('/{record}'),
-
         ];
     }
 

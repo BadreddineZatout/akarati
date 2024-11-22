@@ -44,6 +44,13 @@ return [
             'throw' => false,
         ],
 
+        'public_html' => [
+            'driver' => 'local',
+            'root' => BASE_DIR.'/public_html/storage',
+            'url' => '/storage',
+            'visibility' => 'public',
+        ],
+
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),

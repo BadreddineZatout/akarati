@@ -38,6 +38,7 @@ class PaymentsRelationManager extends RelationManager
                     ->required(),
                 Forms\Components\Textarea::make('description'),
                 SpatieMediaLibraryFileUpload::make('images')
+                    ->disk(env('STORAGE_DISK'))
                     ->multiple(),
 
             ]);

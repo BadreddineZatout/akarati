@@ -99,7 +99,8 @@ class EditProfile extends Page
                 Forms\Components\Section::make('Profile Information')
                     ->description('Update your account\'s profile information and email address.')
                     ->schema([
-                        SpatieMediaLibraryFileUpload::make('avatar'),
+                        SpatieMediaLibraryFileUpload::make('avatar')
+                            ->disk(env('STORAGE_DISK')),
                         Forms\Components\TextInput::make('name')
                             ->required(),
                         Forms\Components\TextInput::make('email')
