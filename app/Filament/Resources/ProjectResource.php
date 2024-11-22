@@ -7,6 +7,7 @@ use App\Filament\Resources\ProjectResource\Pages;
 use App\Filament\Resources\ProjectResource\RelationManagers\BillsRelationManager;
 use App\Filament\Resources\ProjectResource\RelationManagers\BlocksRelationManager;
 use App\Filament\Resources\ProjectResource\RelationManagers\InvoicesRelationManager;
+use App\Filament\Resources\ProjectResource\RelationManagers\PaymentsRelationManager;
 use App\Filament\Resources\ProjectResource\RelationManagers\SupplierInvoicesRelationManager;
 use App\Models\Project;
 use App\Models\User;
@@ -112,6 +113,7 @@ class ProjectResource extends Resource implements HasShieldPermissions
     {
         return [
             BlocksRelationManager::class,
+            PaymentsRelationManager::class,
             InvoicesRelationManager::class,
             SupplierInvoicesRelationManager::class,
             BillsRelationManager::class,
@@ -122,8 +124,6 @@ class ProjectResource extends Resource implements HasShieldPermissions
     {
         return [
             'index' => Pages\ListProjects::route('/'),
-            //            'create' => Pages\CreateProject::route('/create'),
-            //            'edit' => Pages\EditProject::route('/{record}/edit'),
             'view' => Pages\ViewProject::route('/{record}'),
 
         ];
