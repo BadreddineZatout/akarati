@@ -4,7 +4,6 @@ namespace App\Filament\Resources\ClientResource\RelationManagers;
 
 use App\Enums\ProfitStateEnum;
 use App\Filament\Exports\ProfitExporter;
-use App\Filament\Exports\UserProfitExporter;
 use App\Models\ClientPromotion;
 use App\Models\User;
 use App\Services\WalletService;
@@ -162,7 +161,7 @@ class ProfitsRelationManager extends RelationManager
                         $promotion->save();
                     }),
             ])->bulkActions([
-                ExportBulkAction::make()->exporter(ProfitExporter::class) ->formats([
+                ExportBulkAction::make()->exporter(ProfitExporter::class)->formats([
                     ExportFormat::Csv,
                 ]),
             ]);

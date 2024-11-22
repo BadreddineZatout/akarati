@@ -2,13 +2,13 @@
 
 namespace App\Filament\Resources;
 
-use Filament\Tables;
-use App\Models\Block;
-use Filament\Forms\Form;
-use Filament\Tables\Table;
-use Filament\Resources\Resource;
 use App\Filament\Resources\BlockResource\Pages;
+use App\Models\Block;
 use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
+use Filament\Forms\Form;
+use Filament\Resources\Resource;
+use Filament\Tables;
+use Filament\Tables\Table;
 
 class BlockResource extends Resource implements HasShieldPermissions
 {

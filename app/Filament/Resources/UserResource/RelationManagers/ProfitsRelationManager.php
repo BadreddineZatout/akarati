@@ -45,7 +45,7 @@ class ProfitsRelationManager extends RelationManager
                     ->date('d-m-Y')
                     ->sortable(),
             ])->bulkActions([
-                ExportBulkAction::make()->exporter(UserProfitExporter::class) ->formats([
+                ExportBulkAction::make()->exporter(UserProfitExporter::class)->formats([
                     ExportFormat::Csv,
                 ]),
             ]);

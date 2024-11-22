@@ -105,5 +105,4 @@ class SettingPolicy
     {
         return $user->can('{{ Reorder }}');
     }
-
 }

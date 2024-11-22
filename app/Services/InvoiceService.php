@@ -108,6 +108,7 @@ class InvoiceService
 
         return Storage::disk('public')->download("$file_name.pdf");
     }
+
     public function downloadGlobalSupplierInvoice(Supplier $supplier): StreamedResponse
     {
         $supplierParty = new Party([
@@ -147,6 +148,7 @@ class InvoiceService
 
         return Storage::disk('public')->download("$file_name.pdf");
     }
+
     public function downloadGlobalProjectInvoice(Project $project): StreamedResponse
     {
 
@@ -155,12 +157,12 @@ class InvoiceService
         ]);
 
         $items = collect();
-        $project->load(['invoices'=>function ($query){
-           $query->where('type','!=','bill');
+        $project->load(['invoices' => function ($query) {
+            $query->where('type', '!=', 'bill');
         }]);
         foreach ($project->invoices as $invoice) {
             foreach ($invoice->items as $item) {
-                $description = ($invoice->type == 'supplier'?"Supplier: {$invoice->invoicable?->name}":"Client: {$invoice->invoicable?->name}")." ,Promotion: {$invoice->promotion->name}";
+                $description = ($invoice->type == 'supplier' ? "Supplier: {$invoice->invoicable?->name}" : "Client: {$invoice->invoicable?->name}")." ,Promotion: {$invoice->promotion->name}";
 
                 $items->push(
                     InvoiceItem::make($item->name)
@@ -185,6 +187,7 @@ class InvoiceService
 
         return Storage::disk('public')->download("$file_name.pdf");
     }
+
     public function downloadGlobalPromotionInvoice(Promotion $promotion): StreamedResponse
     {
 
@@ -193,12 +196,12 @@ class InvoiceService
         ]);
 
         $items = collect();
-        $promotion->load(['invoices'=>function ($query){
-            $query->where('type','!=','bill');
+        $promotion->load(['invoices' => function ($query) {
+            $query->where('type', '!=', 'bill');
         }]);
         foreach ($promotion->invoices as $invoice) {
             foreach ($invoice->items as $item) {
-                $description = ($invoice->type == 'supplier'?"Supplier: {$invoice->invoicable?->name}":"Client: {$invoice->invoicable?->name}")." ,Block: {$invoice->block->name} ,Project: {$invoice->block->project->name}";
+                $description = ($invoice->type == 'supplier' ? "Supplier: {$invoice->invoicable?->name}" : "Client: {$invoice->invoicable?->name}")." ,Block: {$invoice->block->name} ,Project: {$invoice->block->project->name}";
 
                 $items->push(
                     InvoiceItem::make($item->name)

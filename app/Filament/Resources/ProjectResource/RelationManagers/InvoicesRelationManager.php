@@ -177,7 +177,7 @@ class InvoicesRelationManager extends RelationManager
                         }),
                 ]),
             ])->bulkActions([
-                ExportBulkAction::make()->exporter(InvoiceExporter::class) ->formats([
+                ExportBulkAction::make()->exporter(InvoiceExporter::class)->formats([
                     ExportFormat::Csv,
                 ]),
             ]);

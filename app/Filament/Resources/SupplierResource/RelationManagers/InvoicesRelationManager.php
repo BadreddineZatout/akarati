@@ -53,7 +53,7 @@ class InvoicesRelationManager extends RelationManager
                         return $invoiceService->downloadSupplierInvoice($record);
                     }),
             ])->bulkActions([
-                ExportBulkAction::make()->exporter(UserInvoiceExporter::class) ->formats([
+                ExportBulkAction::make()->exporter(UserInvoiceExporter::class)->formats([
                     ExportFormat::Csv,
                 ]),
             ]);

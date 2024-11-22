@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\Setting;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class ProjectLimitSeeder extends Seeder
@@ -15,7 +14,7 @@ class ProjectLimitSeeder extends Seeder
     {
         Setting::create([
             'key' => 'project_limit',
-            'value' =>3
+            'value' => 3,
         ]);
     }
 }

@@ -21,16 +21,16 @@ class UserPaymentExporter extends Exporter
             ExportColumn::make('amount')->suffix(' DA'),
             ExportColumn::make('paid_at'),
             ExportColumn::make('status')
-                ->getStateUsing(fn ($record) => $record->status->value)
+                ->getStateUsing(fn ($record) => $record->status->value),
         ];
     }
 
     public static function getCompletedNotificationBody(Export $export): string
     {
-        $body = 'Your user payment export has completed and ' . number_format($export->successful_rows) . ' ' . str('row')->plural($export->successful_rows) . ' exported.';
+        $body = 'Your user payment export has completed and '.number_format($export->successful_rows).' '.str('row')->plural($export->successful_rows).' exported.';
 
         if ($failedRowsCount = $export->getFailedRowsCount()) {
-            $body .= ' ' . number_format($failedRowsCount) . ' ' . str('row')->plural($failedRowsCount) . ' failed to export.';
+            $body .= ' '.number_format($failedRowsCount).' '.str('row')->plural($failedRowsCount).' failed to export.';
         }
 
         return $body;

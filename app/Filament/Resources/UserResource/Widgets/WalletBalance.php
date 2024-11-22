@@ -27,6 +27,7 @@ class WalletBalance extends BaseWidget
                 Stat::make('Current Balance', auth()->user()->wallet?->balance),
             ];
         }
+
         return [];
 
     }

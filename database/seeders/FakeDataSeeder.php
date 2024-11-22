@@ -2,11 +2,11 @@
 
 namespace Database\Seeders;
 
+use Carbon\Carbon;
+use Faker\Factory as Faker;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Faker\Factory as Faker;
-use Carbon\Carbon;
 
 class FakeDataSeeder extends Seeder
 {
@@ -74,12 +74,12 @@ class FakeDataSeeder extends Seeder
             $endDate = $faker->dateTimeBetween($startDate, '+6 months');
 
             $projectId = DB::table('projects')->insertGetId([
-                'name' => $faker->words(3, true) . ' Project',
+                'name' => $faker->words(3, true).' Project',
                 'promoter_id' => $faker->randomElement($userIds),
                 'accountant_id' => $faker->randomElement($userIds),
                 'started_at' => $startDate,
                 'ended_at' => $endDate,
-                'status' => $faker->randomElement(['pending', 'in_progress', 'completed', 'not_launched','archived']),
+                'status' => $faker->randomElement(['pending', 'in_progress', 'completed', 'not_launched', 'archived']),
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
@@ -99,9 +99,9 @@ class FakeDataSeeder extends Seeder
         foreach ($projectIds as $projectId) {
             foreach (range(1, 3) as $index) {
                 $blockId = DB::table('blocks')->insertGetId([
-                    'name' => 'Block ' . $faker->buildingNumber,
+                    'name' => 'Block '.$faker->buildingNumber,
                     'project_id' => $projectId,
-                    'state' => $faker->randomElement(['pending', 'in_progress', 'completed', 'not_launched','archived']),
+                    'state' => $faker->randomElement(['pending', 'in_progress', 'completed', 'not_launched', 'archived']),
                     'created_at' => now(),
                     'updated_at' => now(),
                 ]);
@@ -126,10 +126,10 @@ class FakeDataSeeder extends Seeder
         foreach ($blockIds as $blockId) {
             foreach (range(1, 4) as $index) {
                 $promotionId = DB::table('promotions')->insertGetId([
-                    'name' => $faker->words(2, true) . ' ' . $faker->randomElement(['Suite', 'Complex', 'Residence']),
+                    'name' => $faker->words(2, true).' '.$faker->randomElement(['Suite', 'Complex', 'Residence']),
                     'promotion_type_id' => $faker->randomElement($promotionTypeIds),
                     'block_id' => $blockId,
-                    'state' => $faker->randomElement(['pending', 'in_progress', 'completed', 'not_launched','archived']),
+                    'state' => $faker->randomElement(['pending', 'in_progress', 'completed', 'not_launched', 'archived']),
                     'selling_price' => $faker->randomFloat(2, 100000, 1000000),
                     'created_at' => now(),
                     'updated_at' => now(),
@@ -231,7 +231,7 @@ class FakeDataSeeder extends Seeder
         $planTypes = ['Basic', 'Premium', 'Enterprise'];
         foreach ($planTypes as $type) {
             $planId = DB::table('plans')->insertGetId([
-                'name' => json_encode(['en' => $type . ' Plan']),
+                'name' => json_encode(['en' => $type.' Plan']),
                 'slug' => strtolower($type),
                 'description' => json_encode(['en' => $faker->paragraph]),
                 'is_active' => true,
@@ -260,7 +260,7 @@ class FakeDataSeeder extends Seeder
                 'subscriber_type' => 'App\\Models\\Client',
                 'subscriber_id' => $clientId,
                 'plan_id' => $faker->randomElement($planIds),
-                'name' => json_encode(['en' => $faker->words(2, true) . ' Subscription']),
+                'name' => json_encode(['en' => $faker->words(2, true).' Subscription']),
                 'slug' => $faker->slug,
                 'description' => json_encode(['en' => $faker->sentence]),
                 'status' => $faker->randomElement(['active', 'suspended', 'canceled']),

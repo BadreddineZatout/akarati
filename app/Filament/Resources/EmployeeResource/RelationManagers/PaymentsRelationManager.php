@@ -6,7 +6,6 @@ use App\Enums\PaymentStatusEnum;
 use App\Filament\Exports\PaymentExporter;
 use App\Models\Payment;
 use App\Services\WalletService;
-use Filament\Actions\ExportAction;
 use Filament\Actions\Exports\Enums\ExportFormat;
 use Filament\Forms;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
@@ -65,7 +64,7 @@ class PaymentsRelationManager extends RelationManager
                 //
             ])
             ->bulkActions([
-                ExportBulkAction::make()->exporter(PaymentExporter::class) ->formats([
+                ExportBulkAction::make()->exporter(PaymentExporter::class)->formats([
                     ExportFormat::Csv,
                 ]),
             ])

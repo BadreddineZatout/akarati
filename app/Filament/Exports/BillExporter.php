@@ -2,7 +2,6 @@
 
 namespace App\Filament\Exports;
 
-use App\Models\Bill;
 use App\Models\Invoice;
 use Filament\Actions\Exports\ExportColumn;
 use Filament\Actions\Exports\Exporter;
@@ -23,16 +22,16 @@ class BillExporter extends Exporter
             ExportColumn::make('invoiced_at'),
             ExportColumn::make('status')
                 ->getStateUsing(fn ($record) => $record->status->value),
-            ExportColumn::make('comment')
+            ExportColumn::make('comment'),
         ];
     }
 
     public static function getCompletedNotificationBody(Export $export): string
     {
-        $body = 'Your bill export has completed and ' . number_format($export->successful_rows) . ' ' . str('row')->plural($export->successful_rows) . ' exported.';
+        $body = 'Your bill export has completed and '.number_format($export->successful_rows).' '.str('row')->plural($export->successful_rows).' exported.';
 
         if ($failedRowsCount = $export->getFailedRowsCount()) {
-            $body .= ' ' . number_format($failedRowsCount) . ' ' . str('row')->plural($failedRowsCount) . ' failed to export.';
+            $body .= ' '.number_format($failedRowsCount).' '.str('row')->plural($failedRowsCount).' failed to export.';
         }
 
         return $body;

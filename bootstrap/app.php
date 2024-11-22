@@ -19,7 +19,7 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
         $middleware->alias([
             'subscription.verify' => SubscriptionMiddleware::class,
-            'project.limit' => ProjectLimitMiddleware::class
+            'project.limit' => ProjectLimitMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

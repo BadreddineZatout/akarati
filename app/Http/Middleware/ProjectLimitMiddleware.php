@@ -2,7 +2,6 @@
 
 namespace App\Http\Middleware;
 
-use App\Models\Setting;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -17,14 +16,15 @@ class ProjectLimitMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $user= $request->user();
-        if ($user && $user->hasAnyRole(['promoter']) && Route::is('filament.admin.resources.projects.store')){
-           if(count($user->promoter_project) <= (int)(setting('project_limit',3))){
-               return $next($request);
-           }else{
-               return redirect()->back()->with('error', 'you reach project limit');
-           }
+        $user = $request->user();
+        if ($user && $user->hasAnyRole(['promoter']) && Route::is('filament.admin.resources.projects.store')) {
+            if (count($user->promoter_project) <= (int) (setting('project_limit', 3))) {
+                return $next($request);
+            } else {
+                return redirect()->back()->with('error', 'you reach project limit');
+            }
         }
+
         return $next($request);
     }
 }

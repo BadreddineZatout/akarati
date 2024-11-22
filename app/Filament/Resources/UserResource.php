@@ -9,7 +9,6 @@ use App\Filament\Resources\UserResource\RelationManagers\ProfitsRelationManager;
 use App\Filament\Resources\UserResource\RelationManagers\TransactionsRelationManager;
 use App\Models\User;
 use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
-use Filament\Facades\Filament;
 use Filament\Forms;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
@@ -19,7 +18,6 @@ use Filament\Tables\Actions\Action;
 use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
 
 class UserResource extends Resource implements HasShieldPermissions

@@ -168,7 +168,7 @@ class SupplierInvoicesRelationManager extends RelationManager
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
-                ExportBulkAction::make()->exporter(SupplierInvoiceExporter::class) ->formats([
+                ExportBulkAction::make()->exporter(SupplierInvoiceExporter::class)->formats([
                     ExportFormat::Csv,
                 ]),
             ]);

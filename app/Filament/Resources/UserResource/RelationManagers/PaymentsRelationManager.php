@@ -50,7 +50,7 @@ class PaymentsRelationManager extends RelationManager
                     ->badge()
                     ->color(fn (PaymentStatusEnum $state): string => PaymentStatusEnum::color($state->value)),
             ])->bulkActions([
-                ExportBulkAction::make()->exporter(UserPaymentExporter::class) ->formats([
+                ExportBulkAction::make()->exporter(UserPaymentExporter::class)->formats([
                     ExportFormat::Csv,
                 ]),
             ]);

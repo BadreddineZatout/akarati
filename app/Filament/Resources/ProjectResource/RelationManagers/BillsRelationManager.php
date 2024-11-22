@@ -155,7 +155,7 @@ class BillsRelationManager extends RelationManager
                 ]),
             ])
             ->bulkActions([
-                ExportBulkAction::make()->exporter(BillExporter::class) ->formats([
+                ExportBulkAction::make()->exporter(BillExporter::class)->formats([
                     ExportFormat::Csv,
                 ]),
                 Tables\Actions\BulkActionGroup::make([
