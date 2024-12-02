@@ -79,8 +79,6 @@ class PaymentsRelationManager extends RelationManager
                         $data['status'] = PaymentStatusEnum::NOT_PAID->value;
 
                         return $data;
-                    })->after(function (Payment $record, WalletService $walletService) {
-                        $walletService->subAmount(auth()->user()->wallet, $record->amount);
                     }),
             ])
             ->actions([
@@ -97,7 +95,7 @@ class PaymentsRelationManager extends RelationManager
                             ->minValue(0)
                             ->required(),
                     ])
-                    ->action(function ($data, $record) {
+                    ->action(function ($data, $record, WalletService $walletService) {
                         if ($record->amount < $data['amount'] + $record->paid_amount) {
                             return Notification::make()
                                 ->title('The amount is more than the rest of payment.')
@@ -110,6 +108,8 @@ class PaymentsRelationManager extends RelationManager
                             $record->status = PaymentStatusEnum::PAID->value;
                         }
                         $record->save();
+
+                        $walletService->subAmount(auth()->user()->wallet, $data['amount']);
 
                         return Notification::make()
                             ->title('Payment Updated')
