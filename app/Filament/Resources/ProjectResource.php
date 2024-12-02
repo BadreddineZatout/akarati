@@ -6,7 +6,6 @@ use App\Enums\ProjectStatusEnum;
 use App\Filament\Resources\ProjectResource\Pages;
 use App\Filament\Resources\ProjectResource\RelationManagers\BillsRelationManager;
 use App\Filament\Resources\ProjectResource\RelationManagers\BlocksRelationManager;
-use App\Filament\Resources\ProjectResource\RelationManagers\InvoicesRelationManager;
 use App\Filament\Resources\ProjectResource\RelationManagers\PaymentsRelationManager;
 use App\Filament\Resources\ProjectResource\RelationManagers\SupplierInvoicesRelationManager;
 use App\Models\Project;
@@ -114,7 +113,6 @@ class ProjectResource extends Resource implements HasShieldPermissions
         return [
             BlocksRelationManager::class,
             PaymentsRelationManager::class,
-            InvoicesRelationManager::class,
             SupplierInvoicesRelationManager::class,
             BillsRelationManager::class,
         ];

@@ -5,7 +5,6 @@ namespace App\Filament\Resources;
 use App\Enums\PromotionStateEnum;
 use App\Filament\Resources\PromotionResource\Pages;
 use App\Filament\Resources\PromotionResource\RelationManagers\BillsRelationManager;
-use App\Filament\Resources\PromotionResource\RelationManagers\InvoicesRelationManager;
 use App\Filament\Resources\PromotionResource\RelationManagers\SupplierInvoicesRelationManager;
 use App\Models\Promotion;
 use App\Models\PromotionType;
@@ -117,7 +116,6 @@ class PromotionResource extends Resource implements HasShieldPermissions
     public static function getRelations(): array
     {
         return [
-            InvoicesRelationManager::class,
             SupplierInvoicesRelationManager::class,
             BillsRelationManager::class,
         ];

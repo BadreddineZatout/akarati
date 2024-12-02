@@ -3,7 +3,6 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\UserResource\Pages;
-use App\Filament\Resources\UserResource\RelationManagers\InvoicesRelationManager;
 use App\Filament\Resources\UserResource\RelationManagers\PaymentsRelationManager;
 use App\Filament\Resources\UserResource\RelationManagers\ProfitsRelationManager;
 use App\Models\User;
@@ -108,7 +107,6 @@ class UserResource extends Resource implements HasShieldPermissions
     public static function getRelations(): array
     {
         return [
-            InvoicesRelationManager::class,
             PaymentsRelationManager::class,
             ProfitsRelationManager::class,
         ];
