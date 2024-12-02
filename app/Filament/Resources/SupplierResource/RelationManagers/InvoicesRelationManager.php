@@ -53,7 +53,7 @@ class InvoicesRelationManager extends RelationManager
                 Tables\Columns\TextColumn::make('id')
                     ->label('#'),
                 Tables\Columns\TextColumn::make('project.name')
-                    ->label('receiver'),
+                    ->label('Project'),
                 Tables\Columns\TextColumn::make('amount')
                     ->label('Sum of owned total')
                     ->sortable(),
