@@ -71,7 +71,7 @@ class UserResource extends Resource implements HasShieldPermissions
                 Select::make('roles')
                     ->label('Role')
                     ->required()
-                    ->relationship('roles', 'name'),
+                    ->relationship('roles', 'name', fn ($query) => $query->where('name', '<>', 'super_admin')),
             ]);
     }
 
