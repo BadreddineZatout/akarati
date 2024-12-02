@@ -6,7 +6,6 @@ use App\Filament\Resources\UserResource\Pages;
 use App\Filament\Resources\UserResource\RelationManagers\InvoicesRelationManager;
 use App\Filament\Resources\UserResource\RelationManagers\PaymentsRelationManager;
 use App\Filament\Resources\UserResource\RelationManagers\ProfitsRelationManager;
-use App\Filament\Resources\UserResource\RelationManagers\TransactionsRelationManager;
 use App\Models\User;
 use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
 use Filament\Forms;
@@ -46,9 +45,6 @@ class UserResource extends Resource implements HasShieldPermissions
             'update',
             'delete',
             'delete_any',
-            'add_transaction',
-            'accept_transaction',
-            'refuse_transaction',
         ];
     }
 
@@ -112,7 +108,6 @@ class UserResource extends Resource implements HasShieldPermissions
     public static function getRelations(): array
     {
         return [
-            TransactionsRelationManager::class,
             InvoicesRelationManager::class,
             PaymentsRelationManager::class,
             ProfitsRelationManager::class,
