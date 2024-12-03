@@ -17,6 +17,7 @@ class Payment extends Model implements HasMedia
     protected $casts = [
         'paid_at' => 'date:d-m-Y',
         'status' => PaymentStatusEnum::class,
+        'history' => 'array',
     ];
 
     public function employee(): BelongsTo

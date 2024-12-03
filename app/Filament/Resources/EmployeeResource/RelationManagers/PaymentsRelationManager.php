@@ -28,6 +28,7 @@ class PaymentsRelationManager extends RelationManager
             ->schema([
                 Forms\Components\Select::make('project_id')
                     ->relationship('project', 'name', fn ($query) => $query->whereHas('employees', fn ($query) => $query->whereKey($this->ownerRecord->id)))
+                    ->getOptionLabelFromRecordUsing(fn ($record) => $record->name)
                     ->preload()
                     ->searchable()
                     ->required(),
@@ -41,7 +42,14 @@ class PaymentsRelationManager extends RelationManager
                     ->disk(env('STORAGE_DISK'))
                     ->openable()
                     ->multiple(),
-
+                Forms\Components\Repeater::make('history')
+                    ->schema([
+                        Forms\Components\TextInput::make('date'),
+                        Forms\Components\TextInput::make('amount'),
+                    ])
+                    ->columns(2)
+                    ->columnSpanFull()
+                    ->hidden(fn ($record) => ! $record?->history),
             ]);
     }
 
@@ -61,9 +69,6 @@ class PaymentsRelationManager extends RelationManager
                 Tables\Columns\TextColumn::make('status')
                     ->badge()
                     ->color(fn (PaymentStatusEnum $state): string => PaymentStatusEnum::color($state->value)),
-            ])
-            ->filters([
-                //
             ])
             ->bulkActions([
                 ExportBulkAction::make()->exporter(PaymentExporter::class)->formats([
@@ -103,6 +108,10 @@ class PaymentsRelationManager extends RelationManager
                         }
                         $record->increment('paid_amount', $data['amount']);
                         $record->paid_at = now();
+                        $record->history = [
+                            ['date' => $record->paid_at->format('d-m-Y'), 'amount' => $data['amount']],
+                            ...($record->history ?? []),
+                        ];
                         if ($record->amount == $record->paid_amount) {
                             $record->status = PaymentStatusEnum::PAID->value;
                         }

@@ -5,8 +5,6 @@ namespace App\Filament\Resources\UserResource\RelationManagers;
 use App\Enums\PaymentStatusEnum;
 use App\Filament\Exports\UserPaymentExporter;
 use Filament\Actions\Exports\Enums\ExportFormat;
-use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Actions\ExportBulkAction;
@@ -20,16 +18,6 @@ class PaymentsRelationManager extends RelationManager
     public static function canViewForRecord(Model $ownerRecord, string $pageClass): bool
     {
         return ! $ownerRecord->hasRole('super_admin');
-    }
-
-    public function form(Form $form): Form
-    {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('id')
-                    ->required()
-                    ->maxLength(255),
-            ]);
     }
 
     public function table(Table $table): Table

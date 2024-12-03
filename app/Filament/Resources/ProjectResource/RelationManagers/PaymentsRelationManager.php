@@ -43,7 +43,14 @@ class PaymentsRelationManager extends RelationManager
                     ->disk(env('STORAGE_DISK'))
                     ->openable()
                     ->multiple(),
-
+                Forms\Components\Repeater::make('history')
+                    ->schema([
+                        Forms\Components\TextInput::make('date'),
+                        Forms\Components\TextInput::make('amount'),
+                    ])
+                    ->columns(2)
+                    ->columnSpanFull()
+                    ->hidden(fn ($record) => ! $record?->history),
             ]);
     }
 
@@ -105,6 +112,10 @@ class PaymentsRelationManager extends RelationManager
                         }
                         $record->increment('paid_amount', $data['amount']);
                         $record->paid_at = now();
+                        $record->history = [
+                            ['date' => $record->paid_at->format('d-m-Y'), 'amount' => $data['amount']],
+                            ...($record->history ?? []),
+                        ];
                         if ($record->amount == $record->paid_amount) {
                             $record->status = PaymentStatusEnum::PAID->value;
                         }
