@@ -8,7 +8,6 @@ use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -89,11 +88,6 @@ class User extends Authenticatable implements FilamentUser, HasMedia
     public function transactions(): HasMany
     {
         return $this->wallet?->transactions();
-    }
-
-    public function invoices(): MorphMany
-    {
-        return $this->morphMany(Invoice::class, 'invoicable');
     }
 
     public function payments(): HasMany

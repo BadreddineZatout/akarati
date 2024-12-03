@@ -50,6 +50,8 @@ class BillsRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('id')
             ->columns([
+                Tables\Columns\TextColumn::make('invoicedBy.name')
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('amount')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('reste')
@@ -70,6 +72,7 @@ class BillsRelationManager extends RelationManager
                     ->mutateFormDataUsing(function (array $data): array {
                         $data['project_id'] = $this->ownerRecord->block->project_id;
                         $data['type'] = InvoiceTypeEnum::BILL->value;
+                        $data['invoiced_by'] = auth()->id();
                         $data['amount'] = 0;
 
                         return $data;

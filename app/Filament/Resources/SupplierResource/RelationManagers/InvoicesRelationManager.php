@@ -52,6 +52,8 @@ class InvoicesRelationManager extends RelationManager
             ->columns([
                 Tables\Columns\TextColumn::make('id')
                     ->label('#'),
+                Tables\Columns\TextColumn::make('invoicedBy.name')
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('project.name')
                     ->label('Project'),
                 Tables\Columns\TextColumn::make('amount')
@@ -67,6 +69,7 @@ class InvoicesRelationManager extends RelationManager
                     ->visible(auth()->user()->can('add_invoice_project'))
                     ->mutateFormDataUsing(function (array $data): array {
                         $data['type'] = InvoiceTypeEnum::SUPPLIER->value;
+                        $data['invoiced_by'] = auth()->id();
                         $data['amount'] = 0;
 
                         return $data;

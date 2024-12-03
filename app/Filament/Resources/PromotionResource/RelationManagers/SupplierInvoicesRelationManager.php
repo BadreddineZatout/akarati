@@ -8,7 +8,6 @@ use App\Models\Invoice;
 use App\Models\Supplier;
 use App\Services\InvoiceService;
 use Filament\Forms;
-use Filament\Forms\Components\MorphToSelect;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
@@ -27,15 +26,11 @@ class SupplierInvoicesRelationManager extends RelationManager
     {
         return $form
             ->schema([
-                Forms\Components\MorphToSelect::make('invoicable')
-                    ->label('receiver')
-                    ->types([
-                        MorphToSelect\Type::make(Supplier::class)
-                            ->titleAttribute('id')
-                            ->getOptionLabelFromRecordUsing(fn (Supplier $record): string => "{$record->first_name} - {$record->last_name}"),
-                    ])
-                    ->required()
-                    ->columnSpanFull(),
+                Forms\Components\Select::make('supplier_id')
+                    ->relationship('supplier', 'id')
+                    ->getOptionLabelFromRecordUsing(fn (Supplier $record): string => "{$record->first_name} - {$record->last_name}")
+                    ->searchable()
+                    ->preload(),
                 Forms\Components\DatePicker::make('invoiced_at')
                     ->required()
                     ->label('date'),
@@ -59,8 +54,9 @@ class SupplierInvoicesRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('id')
             ->columns([
-                Tables\Columns\TextColumn::make('invoicable.name')
-                    ->label('receiver'),
+                Tables\Columns\TextColumn::make('invoicedBy.name')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('supplier.name'),
                 Tables\Columns\TextColumn::make('amount')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('reste')
@@ -80,6 +76,7 @@ class SupplierInvoicesRelationManager extends RelationManager
                     ->mutateFormDataUsing(function (array $data): array {
                         $data['project_id'] = $this->ownerRecord->block->project_id;
                         $data['type'] = InvoiceTypeEnum::SUPPLIER->value;
+                        $data['invoiced_by'] = auth()->id();
                         $data['amount'] = 0;
 
                         return $data;

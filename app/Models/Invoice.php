@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
@@ -24,9 +23,14 @@ class Invoice extends Model implements HasMedia
         'status' => PaymentStatusEnum::class,
     ];
 
-    public function invoicable(): MorphTo
+    public function supplier(): BelongsTo
     {
-        return $this->morphTo();
+        return $this->belongsTo(Supplier::class);
+    }
+
+    public function invoicedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'invoiced_by');
     }
 
     public function project(): BelongsTo

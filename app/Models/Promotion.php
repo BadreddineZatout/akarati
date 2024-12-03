@@ -44,11 +44,11 @@ class Promotion extends Model
 
     public function supplier_invoices(): HasMany
     {
-        return $this->hasMany(Invoice::class)->whereHasMorph('invoicable', Supplier::class);
+        return $this->hasMany(Invoice::class)->has('supplier');
     }
 
     public function bills(): HasMany
     {
-        return $this->hasMany(Invoice::class)->whereNull('invoicable_id');
+        return $this->hasMany(Invoice::class)->whereNull('supplier_id');
     }
 }

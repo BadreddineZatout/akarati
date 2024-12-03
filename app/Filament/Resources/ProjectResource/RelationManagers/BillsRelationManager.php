@@ -53,6 +53,8 @@ class BillsRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('id')
             ->columns([
+                Tables\Columns\TextColumn::make('invoicedBy.name')
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('promotion.fullname')
                     ->default('---')
                     ->searchable(),
@@ -75,6 +77,7 @@ class BillsRelationManager extends RelationManager
                     ->visible(auth()->user()->can('add_invoice_project'))
                     ->mutateFormDataUsing(function (array $data): array {
                         $data['type'] = InvoiceTypeEnum::BILL->value;
+                        $data['invoiced_by'] = auth()->id();
                         $data['amount'] = 0;
 
                         return $data;

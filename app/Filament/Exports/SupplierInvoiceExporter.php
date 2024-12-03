@@ -17,7 +17,7 @@ class SupplierInvoiceExporter extends Exporter
             ExportColumn::make('id')
                 ->label('#'),
             ExportColumn::make('promotion.fullname'),
-            ExportColumn::make('invoicable.name')->label('Recipient'),
+            ExportColumn::make('supplier.name')->label('Recipient'),
             ExportColumn::make('amount')->suffix(' DA'),
             ExportColumn::make('reste')->getStateusing(fn ($record) => $record->amount - $record->paid_amount)->suffix(' DA'),
             ExportColumn::make('invoiced_at'),
