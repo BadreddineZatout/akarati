@@ -55,6 +55,7 @@ class ProfitsRelationManager extends RelationManager
                     ->numeric(),
                 SpatieMediaLibraryFileUpload::make('images')
                     ->disk(env('STORAGE_DISK'))
+                    ->openable()
                     ->multiple(),
             ]);
     }

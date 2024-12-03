@@ -41,6 +41,7 @@ class BillsRelationManager extends RelationManager
                     ->columnSpanFull(),
                 SpatieMediaLibraryFileUpload::make('images')
                     ->disk(env('STORAGE_DISK'))
+                    ->openable()
                     ->multiple(),
             ]);
     }
