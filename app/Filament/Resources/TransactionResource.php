@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Enums\TransactionStatusEnum;
 use App\Filament\Resources\TransactionResource\Pages;
 use App\Models\Transaction;
+use App\Models\User;
 use App\Services\TransactionService;
 use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
 use Filament\Forms;
@@ -40,13 +41,18 @@ class TransactionResource extends Resource implements HasShieldPermissions
     {
         return $form
             ->schema([
+                Forms\Components\Select::make('wallet_id')
+                    ->relationship('wallet', 'id', fn ($query) => $query->whereIn('user_id', User::withoutRole('super_admin')->pluck('id'))->where('user_id', '<>', auth()->id()))
+                    ->getOptionLabelFromRecordUsing(fn ($record) => $record->user->name)
+                    ->preload()
+                    ->searchable()
+                    ->required(),
                 Forms\Components\TextInput::make('amount')
                     ->required()
                     ->numeric()
                     ->default(0),
                 Forms\Components\TextInput::make('status')
-                    ->required()
-                    ->maxLength(255),
+                    ->hiddenOn(['create', 'edit']),
             ]);
     }
 
@@ -54,6 +60,8 @@ class TransactionResource extends Resource implements HasShieldPermissions
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('wallet.user.name')
+                    ->hidden(! auth()->user()->hasRole('super_admin')),
                 Tables\Columns\TextColumn::make('amount')
                     ->numeric()
                     ->sortable(),
