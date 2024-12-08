@@ -21,6 +21,7 @@ class Invoice extends Model implements HasMedia
         'type' => InvoiceTypeEnum::class,
         'invoiced_at' => 'date',
         'status' => PaymentStatusEnum::class,
+        'history' => 'array',
     ];
 
     public function supplier(): BelongsTo

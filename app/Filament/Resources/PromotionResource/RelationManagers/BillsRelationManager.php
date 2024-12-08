@@ -38,11 +38,31 @@ class BillsRelationManager extends RelationManager
                             ->required(),
                     ])
                     ->columns(2)
-                    ->columnSpanFull(),
+                    ->columnSpanFull()
+                    ->hiddenOn(['view']),
+                Forms\Components\Repeater::make('items')
+                    ->relationship('items')
+                    ->schema([
+                        Forms\Components\TextInput::make('name')
+                            ->required(),
+                        Forms\Components\TextInput::make('price')
+                            ->required(),
+                    ])
+                    ->columns(2)
+                    ->columnSpanFull()
+                    ->hiddenOn(['create', 'edit']),
                 SpatieMediaLibraryFileUpload::make('images')
                     ->disk(env('STORAGE_DISK'))
                     ->openable()
                     ->multiple(),
+                Forms\Components\Repeater::make('history')
+                    ->schema([
+                        Forms\Components\TextInput::make('date'),
+                        Forms\Components\TextInput::make('amount'),
+                    ])
+                    ->columns(2)
+                    ->columnSpanFull()
+                    ->hidden(fn ($record) => ! $record?->history),
             ]);
     }
 
@@ -91,6 +111,7 @@ class BillsRelationManager extends RelationManager
             ])
             ->actions([
                 ActionGroup::make([
+                    Tables\Actions\ViewAction::make(),
                     Tables\Actions\Action::make('Generate')
                         ->visible(auth()->user()->can('generate_invoice_promotion'))
                         ->icon('heroicon-o-inbox-arrow-down')
@@ -119,6 +140,10 @@ class BillsRelationManager extends RelationManager
                                     ->send();
                             }
                             $record->increment('paid_amount', $data['amount']);
+                            $record->history = [
+                                ['date' => now()->format('d-m-Y'), 'amount' => $data['amount']],
+                                ...($record->history ?? []),
+                            ];
                             if ($record->amount == $record->paid_amount) {
                                 $record->status = PaymentStatusEnum::PAID->value;
                             }
