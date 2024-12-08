@@ -31,6 +31,11 @@ class Project extends Model
         return $this->belongsTo(User::class, 'promoter_id');
     }
 
+    public function chef(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'chef_id');
+    }
+
     public function accountant(): BelongsTo
     {
         return $this->belongsTo(User::class, 'accountant_id');

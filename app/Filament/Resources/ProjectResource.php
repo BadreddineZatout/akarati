@@ -60,7 +60,15 @@ class ProjectResource extends Resource implements HasShieldPermissions
                     ->relationship('promoter', 'name')
                     ->getOptionLabelUsing(fn ($value) => User::find($value)?->name)
                     ->options(User::role('promoteur')->pluck('name', 'id')->toArray())
-                    ->required(),
+                    ->required()
+                    ->hidden(auth()->user()->hasRole('promoteur')),
+                Forms\Components\Select::make('chef_id')
+                    ->label(__('Chef'))
+                    ->relationship('chef', 'name')
+                    ->getOptionLabelUsing(fn ($value) => User::find($value)?->name)
+                    ->options(User::role('chef chantier')->pluck('name', 'id')->toArray())
+                    ->required()
+                    ->hidden(auth()->user()->hasRole('chef chantier')),
                 Forms\Components\Select::make('accountant_id')
                     ->label(__('Accountant'))
                     ->relationship('accountant', 'name')
@@ -77,8 +85,9 @@ class ProjectResource extends Resource implements HasShieldPermissions
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name'),
-                Tables\Columns\TextColumn::make('accountant.name'),
                 Tables\Columns\TextColumn::make('promoter.name'),
+                Tables\Columns\TextColumn::make('chef.name'),
+                Tables\Columns\TextColumn::make('accountant.name'),
                 Tables\Columns\TextColumn::make('started_at')
                     ->date('d-m-Y'),
                 Tables\Columns\TextColumn::make('ended_at')
@@ -86,9 +95,6 @@ class ProjectResource extends Resource implements HasShieldPermissions
                 Tables\Columns\TextColumn::make('status')
                     ->badge()
                     ->color(fn ($record) => ProjectStatusEnum::color($record->status)),
-            ])
-            ->filters([
-                //
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
