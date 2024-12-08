@@ -91,7 +91,7 @@ class PaymentsRelationManager extends RelationManager
                     ->color('success')
                     ->icon('heroicon-o-check')
                     ->requiresConfirmation()
-                    ->visible(fn ($record) => ($record->status != PaymentStatusEnum::PAID) && auth()->user()->can('mark_payment_as_paid_employee'))
+                    ->visible(fn ($record) => ($record->status != PaymentStatusEnum::PAID) && auth()->user()->can('mark_payment_as_paid_employee') && $record->paid_by === auth()->id())
                     ->form([
                         TextInput::make('amount')
                             ->label('Amount')
