@@ -10,6 +10,8 @@ use App\Services\TransactionService;
 use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Actions\Action;
@@ -56,12 +58,28 @@ class TransactionResource extends Resource implements HasShieldPermissions
             ]);
     }
 
+    public static function infolist(Infolist $infolist): Infolist
+    {
+        return $infolist
+            ->schema([
+                TextEntry::make('issuedBy.name')
+                    ->label('Sent From'),
+                TextEntry::make('wallet.user.name')
+                    ->label('User'),
+                TextEntry::make('amount'),
+                TextEntry::make('status')
+                    ->badge()
+                    ->color(fn (TransactionStatusEnum $state): string => TransactionStatusEnum::color($state->value)),
+            ]);
+    }
+
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('wallet.user.name')
-                    ->hidden(! auth()->user()->hasRole('super_admin')),
+                Tables\Columns\TextColumn::make('issuedBy.name')
+                    ->label('Sent From'),
+                Tables\Columns\TextColumn::make('wallet.user.name'),
                 Tables\Columns\TextColumn::make('amount')
                     ->numeric()
                     ->sortable(),
@@ -79,13 +97,13 @@ class TransactionResource extends Resource implements HasShieldPermissions
                         ->color('success')
                         ->requiresConfirmation()
                         ->action(fn (Transaction $record, TransactionService $transactionService) => $transactionService->acceptTransaction($record))
-                        ->visible(fn ($record) => ($record->status === TransactionStatusEnum::PENDING) && auth()->user()->can('accept_transaction_transaction')),
+                        ->visible(fn ($record) => ($record->status === TransactionStatusEnum::PENDING) && auth()->user()->can('accept_transaction_transaction') && $record->wallet_id === auth()->user()->wallet?->id),
                     Action::make('Refuse')
                         ->icon('heroicon-o-x-circle')
                         ->color('danger')
                         ->requiresConfirmation()
                         ->action(fn (Transaction $record, TransactionService $transactionService) => $transactionService->refuseTransaction($record))
-                        ->visible(fn ($record) => ($record->status === TransactionStatusEnum::PENDING) && auth()->user()->can('refuse_transaction_transaction')),
+                        ->visible(fn ($record) => ($record->status === TransactionStatusEnum::PENDING) && auth()->user()->can('refuse_transaction_transaction') && $record->wallet_id === auth()->user()->wallet?->id),
                 ]),
             ])
             ->bulkActions([
@@ -97,7 +115,8 @@ class TransactionResource extends Resource implements HasShieldPermissions
                     return $query;
                 }
 
-                return $query->where('wallet_id', auth()->user()->wallet_id);
+                return $query->where('wallet_id', auth()->user()->wallet?->id)
+                    ->orWhere('issued_by', auth()->id());
             });
     }
 

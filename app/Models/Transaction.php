@@ -16,7 +16,7 @@ class Transaction extends Model
 
     public function issuedBy(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'issued_by', 'id');
     }
 
     public function wallet(): BelongsTo
