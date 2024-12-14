@@ -18,6 +18,21 @@ class ClientResource extends Resource implements HasShieldPermissions
 
     protected static ?string $navigationIcon = 'heroicon-o-users';
 
+    public static function getNavigationLabel(): string
+    {
+        return __('Clients');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('Client');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('Clients');
+    }
+
     public static function getPermissionPrefixes(): array
     {
         return [

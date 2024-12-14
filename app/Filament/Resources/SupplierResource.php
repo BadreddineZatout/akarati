@@ -19,6 +19,21 @@ class SupplierResource extends Resource implements HasShieldPermissions
 
     protected static ?string $navigationIcon = 'heroicon-o-building-storefront';
 
+    public static function getNavigationLabel(): string
+    {
+        return __('Suppliers');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('Supplier');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('Suppliers');
+    }
+
     public static function getPermissionPrefixes(): array
     {
         return [

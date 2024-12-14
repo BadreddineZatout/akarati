@@ -25,6 +25,21 @@ class TransactionResource extends Resource implements HasShieldPermissions
 
     protected static ?string $navigationIcon = 'heroicon-o-currency-dollar';
 
+    public static function getNavigationLabel(): string
+    {
+        return __('Transactions');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('Transaction');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('Transactions');
+    }
+
     public static function getPermissionPrefixes(): array
     {
         return [

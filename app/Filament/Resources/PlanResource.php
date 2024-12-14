@@ -19,6 +19,21 @@ class PlanResource extends Resource implements HasShieldPermissions
 
     protected static ?string $navigationIcon = 'heroicon-o-queue-list';
 
+    public static function getNavigationLabel(): string
+    {
+        return __('Plans');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('Plan');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('Plans');
+    }
+
     public static function getPermissionPrefixes(): array
     {
         return [

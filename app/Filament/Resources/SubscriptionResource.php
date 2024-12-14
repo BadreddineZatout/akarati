@@ -21,6 +21,21 @@ class SubscriptionResource extends Resource implements HasShieldPermissions
 
     protected static ?string $navigationIcon = 'heroicon-o-shopping-bag';
 
+    public static function getNavigationLabel(): string
+    {
+        return __('Subsriptions');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('Subsription');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('Subsriptions');
+    }
+
     public static function getPermissionPrefixes(): array
     {
         return [

@@ -18,6 +18,21 @@ class EmployeeResource extends Resource implements HasShieldPermissions
 
     protected static ?string $navigationIcon = 'heroicon-o-user-group';
 
+    public static function getNavigationLabel(): string
+    {
+        return __('Employees');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('Employee');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('Employees');
+    }
+
     public static function getPermissionPrefixes(): array
     {
         return [

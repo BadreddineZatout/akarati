@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Policies\PlanPolicy;
 use App\Policies\RolePolicy;
+use BezhanSalleh\FilamentLanguageSwitch\LanguageSwitch;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 use Laravelcm\Subscriptions\Models\Plan;
@@ -26,5 +27,10 @@ class AppServiceProvider extends ServiceProvider
     {
         Gate::policy(Role::class, RolePolicy::class);
         Gate::policy(Plan::class, PlanPolicy::class);
+
+        LanguageSwitch::configureUsing(function (LanguageSwitch $switch) {
+            $switch
+                ->locales(['ar', 'en', 'fr']); // also accepts a closure
+        });
     }
 }

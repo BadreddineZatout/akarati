@@ -24,6 +24,21 @@ class ProjectResource extends Resource implements HasShieldPermissions
 
     protected static ?string $navigationIcon = 'heroicon-o-clipboard-document-list';
 
+    public static function getNavigationLabel(): string
+    {
+        return __('Projects');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('Project');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('Projects');
+    }
+
     public static function getPermissionPrefixes(): array
     {
         return [

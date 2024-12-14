@@ -17,6 +17,21 @@ class SettingResource extends Resource implements HasShieldPermissions
 
     protected static ?string $navigationIcon = 'heroicon-o-cog';
 
+    public static function getNavigationLabel(): string
+    {
+        return __('Settings');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('Settings');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('Setting');
+    }
+
     public static function getPermissionPrefixes(): array
     {
         return [
@@ -33,8 +48,12 @@ class SettingResource extends Resource implements HasShieldPermissions
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('key')->required(),
-                Forms\Components\Textarea::make('value')->required(),
+                Forms\Components\TextInput::make('key')
+                    ->label(__('key'))
+                    ->required(),
+                Forms\Components\Textarea::make('value')
+                    ->label(__('value'))
+                    ->required(),
             ]);
     }
 
@@ -42,9 +61,10 @@ class SettingResource extends Resource implements HasShieldPermissions
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('key'),
-                Tables\Columns\TextColumn::make('value'),
-                Tables\Columns\TextColumn::make('created_at'),
+                Tables\Columns\TextColumn::make('key')
+                    ->label(__('key')),
+                Tables\Columns\TextColumn::make('value')
+                    ->label(__('value')),
             ])
             ->filters([
                 //
@@ -60,19 +80,10 @@ class SettingResource extends Resource implements HasShieldPermissions
             ]);
     }
 
-    public static function getRelations(): array
-    {
-        return [
-            //
-        ];
-    }
-
     public static function getPages(): array
     {
         return [
             'index' => Pages\ListSettings::route('/'),
-            //            'create' => Pages\CreateSetting::route('/create'),
-            //            'edit' => Pages\EditSetting::route('/{record}/edit'),
         ];
     }
 }

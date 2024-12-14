@@ -15,7 +15,7 @@ class WalletBalance extends BaseWidget
         if ($this->record) {
             if ($this->record->wallet) {
                 return [
-                    Stat::make('Current Balance', $this->record->wallet?->balance),
+                    Stat::make(__('Current Balance'), $this->record->wallet?->balance),
                 ];
             }
 
@@ -24,7 +24,7 @@ class WalletBalance extends BaseWidget
 
         if (auth()->user()->wallet) {
             return [
-                Stat::make('Current Balance', auth()->user()->wallet?->balance),
+                Stat::make(__('Current Balance'), auth()->user()->wallet?->balance),
             ];
         }
 

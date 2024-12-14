@@ -18,6 +18,21 @@ class PromotionTypeResource extends Resource implements HasShieldPermissions
 
     protected static ?string $navigationIcon = 'heroicon-o-building-office';
 
+    public static function getNavigationLabel(): string
+    {
+        return __('Promotion Types');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('Promotion Type');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('Promotion Types');
+    }
+
     public static function getPermissionPrefixes(): array
     {
         return [
