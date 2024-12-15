@@ -75,7 +75,7 @@ class PaymentsRelationManager extends RelationManager
                 Tables\Columns\TextColumn::make('paidBy.name')
                     ->label(__('Paid By')),
                 Tables\Columns\TextColumn::make('project.name')
-                    ->label(__('Projet')),
+                    ->label(__('Project')),
                 Tables\Columns\TextColumn::make('amount')
                     ->label(__('Amount'))
                     ->suffix(' DA'),

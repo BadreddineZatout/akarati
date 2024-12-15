@@ -23,12 +23,12 @@ class SubscriptionResource extends Resource implements HasShieldPermissions
 
     public static function getNavigationLabel(): string
     {
-        return __('Subsriptions');
+        return __('Subscriptions');
     }
 
     public static function getModelLabel(): string
     {
-        return __('Subsription');
+        return __('Subscription');
     }
 
     public static function getPluralModelLabel(): string
