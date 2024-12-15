@@ -102,6 +102,7 @@ class TransactionResource extends Resource implements HasShieldPermissions
                     ->badge()
                     ->color(fn (TransactionStatusEnum $state): string => TransactionStatusEnum::color($state->value)),
             ])
+            ->defaultSort('id', 'desc')
             ->actions([
                 ActionGroup::make([
                     Tables\Actions\ViewAction::make(),
@@ -130,8 +131,10 @@ class TransactionResource extends Resource implements HasShieldPermissions
                     return $query;
                 }
 
-                return $query->where('wallet_id', auth()->user()->wallet?->id)
-                    ->orWhere('issued_by', auth()->id());
+                return $query->where(function ($query) {
+                    return $query->where('wallet_id', auth()->user()->wallet?->id)
+                        ->orWhere('issued_by', auth()->id());
+                });
             });
     }
 
