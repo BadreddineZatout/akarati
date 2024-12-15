@@ -18,31 +18,39 @@ use Filament\Tables;
 use Filament\Tables\Actions\ExportBulkAction;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 use Spatie\Permission\Models\Role;
 
 class ProfitsRelationManager extends RelationManager
 {
     protected static string $relationship = 'profits';
 
+    public static function getTitle(Model $ownerRecord, string $pageClass): string
+    {
+        return __('Profits');
+    }
+
     public function form(Form $form): Form
     {
         return $form
             ->schema([
                 Forms\Components\Select::make('promotion_id')
-                    ->label('Promotion')
+                    ->label(__('Promotion'))
                     ->options(fn () => $this->ownerRecord->promotions()->wherePivot('state', ProfitStateEnum::NOT_PAID->value)->get()->pluck('fullname', 'id'))
                     ->required()
                     ->hiddenOn('edit'),
                 Forms\Components\DatePicker::make('paid_at')
+                    ->label(__('Paid At'))
                     ->required(),
                 Forms\Components\Select::make('role')
+                    ->label(__('Role'))
                     ->live()
-                    ->label('Role')
                     ->options(fn () => Role::whereNotIn('name', ['super_admin', 'panel_user'])->pluck('name', 'name'))
                     ->dehydrated(false)
                     ->required()
                     ->hiddenOn('edit'),
                 Forms\Components\Select::make('paid_to')
+                    ->label(__('Paid To'))
                     ->required()
                     ->label('Paid To')
                     ->placeholder(fn (Get $get): string => empty($get('role')) ? 'First select role' : 'Select an option')
@@ -51,9 +59,11 @@ class ProfitsRelationManager extends RelationManager
                     })
                     ->hiddenOn('edit'),
                 Forms\Components\TextInput::make('amount')
+                    ->label('Amount')
                     ->required()
                     ->numeric(),
                 SpatieMediaLibraryFileUpload::make('images')
+                    ->label(__('Images'))
                     ->disk(env('STORAGE_DISK'))
                     ->openable()
                     ->multiple(),
@@ -65,17 +75,21 @@ class ProfitsRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('id')
             ->columns([
-                Tables\Columns\TextColumn::make('promotion.fullname'),
+                Tables\Columns\TextColumn::make('promotion.fullname')
+                    ->label(__('Promotion')),
                 Tables\Columns\TextColumn::make('paidTo.name')
+                    ->label(__('Paid To'))
                     ->searchable(),
-                Tables\Columns\TextColumn::make('amount'),
+                Tables\Columns\TextColumn::make('amount')
+                    ->label('Amount'),
                 Tables\Columns\TextColumn::make('paid_at')
+                    ->label(__('Paid At'))
                     ->date('d-m-Y')
                     ->sortable(),
             ])
             ->filters([
                 SelectFilter::make('promotion_id')
-                    ->label('Promotion')
+                    ->label(__('Promotion'))
                     ->options(fn () => $this->ownerRecord->promotions()->get()->pluck('fullname', 'id')),
             ])
             ->headerActions([

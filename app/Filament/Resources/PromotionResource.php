@@ -8,13 +8,11 @@ use App\Filament\Resources\PromotionResource\RelationManagers\BillsRelationManag
 use App\Filament\Resources\PromotionResource\RelationManagers\SupplierInvoicesRelationManager;
 use App\Models\Promotion;
 use App\Models\PromotionType;
-use App\Services\InvoiceService;
 use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
-use Filament\Tables\Actions\Action;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -49,6 +47,7 @@ class PromotionResource extends Resource implements HasShieldPermissions
         return $form
             ->schema([
                 Forms\Components\TextInput::make('name')
+                    ->label(__('Name'))
                     ->required(),
                 Forms\Components\Select::make('promotion_type_id')
                     ->label(__('Promotion Type'))
@@ -57,7 +56,7 @@ class PromotionResource extends Resource implements HasShieldPermissions
                     ->options(PromotionType::pluck('name', 'id')->toArray())
                     ->required(),
                 Forms\Components\Select::make('state')
-                    ->label('State')
+                    ->label(__('State'))
                     ->options(array_reduce(PromotionStateEnum::cases(), function ($carry, $state) {
                         $carry[$state->value] = ucfirst(str_replace('_', ' ', $state->name));
 
@@ -66,6 +65,7 @@ class PromotionResource extends Resource implements HasShieldPermissions
                     ->default('not_launched'),
 
                 Forms\Components\TextInput::make('selling_price')
+                    ->label(__('Selling Price'))
                     ->required()
                     ->numeric(),
 
@@ -77,34 +77,25 @@ class PromotionResource extends Resource implements HasShieldPermissions
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')
+                    ->label(__('Name'))
                     ->searchable(),
                 Tables\Columns\TextColumn::make('promotion_type.name')
+                    ->label(__('Promotion Type'))
                     ->searchable(),
                 Tables\Columns\TextColumn::make('block.name')
+                    ->label(__('Block'))
                     ->searchable(),
                 Tables\Columns\TextColumn::make('state')
+                    ->label(__('State'))
                     ->badge()
                     ->color(fn ($record) => PromotionStateEnum::color($record->state)),
                 Tables\Columns\TextColumn::make('selling_price')
+                    ->label(__('Selling Price'))
                     ->numeric(),
             ])
-            ->filters([
-                //
-            ])
             ->actions([
-                //                Action::make('sell_promotion')
-                //                    ->url(fn (Promotion $record): string => PromotionResource::getUrl('sell', ['record' => $record]))->icon('heroicon-o-shopping-bag')
-                //                    ->color('primary'),
                 Tables\Actions\EditAction::make(),
                 Pages\CustomDelete::make()->name('custom_delete_action'),
-                //                Tables\Actions\Action::make('Generate Invoice')
-                //                    ->icon('heroicon-o-inbox-arrow-down')
-                //                    ->color('success')
-                //                    ->requiresConfirmation()
-                //                    ->action(function ( $record, InvoiceService $invoiceService) {
-                //                        echo $record;
-                ////                        return $invoiceService->downloadGlobalPromotionInvoice($record);
-                //                    }),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

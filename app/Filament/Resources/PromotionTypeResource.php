@@ -50,6 +50,7 @@ class PromotionTypeResource extends Resource implements HasShieldPermissions
         return $form
             ->schema([
                 Forms\Components\TextInput::make('name')
+                    ->label(__('Name'))
                     ->required()
                     ->maxLength(255),
             ]);
@@ -59,11 +60,8 @@ class PromotionTypeResource extends Resource implements HasShieldPermissions
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name'),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->date('d-m-Y'),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->date('d-m-Y'),
+                Tables\Columns\TextColumn::make('name')
+                    ->label(__('Name')),
             ])
             ->filters([
                 //

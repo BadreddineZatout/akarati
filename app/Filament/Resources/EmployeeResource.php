@@ -53,16 +53,21 @@ class EmployeeResource extends Resource implements HasShieldPermissions
         return $form
             ->schema([
                 Forms\Components\TextInput::make('first_name')
+                    ->label(__('First Name'))
                     ->required(),
                 Forms\Components\TextInput::make('last_name')
+                    ->label(__('Last Name'))
                     ->required(),
                 Forms\Components\TextInput::make('phone')
                     ->label('Phone number')
                     ->tel()
                     ->required(),
-                Forms\Components\TextInput::make('address'),
-                Forms\Components\DatePicker::make('birthday'),
+                Forms\Components\TextInput::make('address')
+                    ->label(__('Address')),
+                Forms\Components\DatePicker::make('birthday')
+                    ->label(__('Birthday')),
                 Forms\Components\Select::make('projects')
+                    ->label(__('Projects'))
                     ->relationship('projects', 'name')
                     ->multiple(),
             ]);
@@ -73,15 +78,19 @@ class EmployeeResource extends Resource implements HasShieldPermissions
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('first_name')
+                    ->label(__('First Name'))
                     ->searchable(),
                 Tables\Columns\TextColumn::make('last_name')
+                    ->label(__('Last Name'))
                     ->searchable(),
                 Tables\Columns\TextColumn::make('phone')
                     ->label(__('Phone Number'))
                     ->searchable(),
                 Tables\Columns\TextColumn::make('address')
+                    ->label(__('Address'))
                     ->searchable(),
                 Tables\Columns\TextColumn::make('birthday')
+                    ->label(__('Birthday'))
                     ->date(),
             ])
             ->filters([

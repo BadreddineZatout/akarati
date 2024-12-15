@@ -66,6 +66,7 @@ class SubscriptionResource extends Resource implements HasShieldPermissions
                     ->searchable()
                     ->required(),
                 Forms\Components\DateTimePicker::make('starts_at')
+                    ->label(__('Starts At'))
                     ->required(),
 
             ]);
@@ -76,27 +77,31 @@ class SubscriptionResource extends Resource implements HasShieldPermissions
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('plan.name')
-                    ->label('Plan'),
+                    ->label(__('Plan')),
                 Tables\Columns\TextColumn::make('subscriber.name')
-                    ->label('Subscriber'),
+                    ->label(__('Subscriber')),
                 Tables\Columns\TextColumn::make('status')
+                    ->label(__('Status'))
                     ->badge()
                     ->color(fn ($record) => SubscriptionStateEnum::color($record->status)),
-                Tables\Columns\TextColumn::make('starts_at'),
-                Tables\Columns\TextColumn::make('ends_at'),
-            ])
-            ->filters([
-                //
+                Tables\Columns\TextColumn::make('starts_at')
+                    ->label(__('Starts At')),
+                Tables\Columns\TextColumn::make('ends_at')
+                    ->label(__('Ends At')),
             ])
             ->actions([
-                Tables\Actions\Action::make('renew')->icon('heroicon-m-arrow-path')
+                Tables\Actions\Action::make('renew')
+                    ->label(__('Renew'))
+                    ->icon('heroicon-m-arrow-path')
                     ->action(function (array $data, Subscription $record): void {
                         User::find($record->subscriber_id)->planSubscription($record->slug)->renew();
                         Notification::make()
                             ->success()
                             ->title('Renewed subscription successfully');
                     }),
-                Tables\Actions\Action::make('changePlan')->icon('heroicon-m-pencil-square')
+                Tables\Actions\Action::make('changePlan')
+                    ->label(__('Change Plan'))
+                    ->icon('heroicon-m-pencil-square')
                     ->form([
                         Forms\Components\Select::make('plan_id')
                             ->label(__('Plan'))

@@ -17,35 +17,49 @@ use Filament\Tables;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Actions\ExportBulkAction;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 
 class PaymentsRelationManager extends RelationManager
 {
     protected static string $relationship = 'payments';
+
+    public static function getTitle(Model $ownerRecord, string $pageClass): string
+    {
+        return __('Payments');
+    }
 
     public function form(Form $form): Form
     {
         return $form
             ->schema([
                 Forms\Components\Select::make('project_id')
+                    ->label(__('Projet'))
                     ->relationship('project', 'name', fn ($query) => $query->whereHas('employees', fn ($query) => $query->whereKey($this->ownerRecord->id)))
                     ->getOptionLabelFromRecordUsing(fn ($record) => $record->name)
                     ->preload()
                     ->searchable()
                     ->required(),
                 Forms\Components\TextInput::make('amount')
+                    ->label(__('Amount'))
                     ->required()
                     ->maxLength(255),
                 Forms\Components\DatePicker::make('paid_at')
+                    ->label(__('Paid At'))
                     ->required(),
-                Forms\Components\Textarea::make('description'),
+                Forms\Components\Textarea::make('description')
+                    ->label(__('Description')),
                 SpatieMediaLibraryFileUpload::make('images')
+                    ->label(__('Images'))
                     ->disk(env('STORAGE_DISK'))
                     ->openable()
                     ->multiple(),
                 Forms\Components\Repeater::make('history')
+                    ->label(__('History'))
                     ->schema([
-                        Forms\Components\TextInput::make('date'),
-                        Forms\Components\TextInput::make('amount'),
+                        Forms\Components\TextInput::make('date')
+                            ->label(__('Date')),
+                        Forms\Components\TextInput::make('amount')
+                            ->label(__('Amount')),
                     ])
                     ->columns(2)
                     ->columnSpanFull()
@@ -58,15 +72,22 @@ class PaymentsRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('amount')
             ->columns([
-                Tables\Columns\TextColumn::make('paidBy.name'),
-                Tables\Columns\TextColumn::make('project.name'),
-                Tables\Columns\TextColumn::make('amount')->suffix(' DA'),
+                Tables\Columns\TextColumn::make('paidBy.name')
+                    ->label(__('Paid By')),
+                Tables\Columns\TextColumn::make('project.name')
+                    ->label(__('Projet')),
+                Tables\Columns\TextColumn::make('amount')
+                    ->label(__('Amount'))
+                    ->suffix(' DA'),
                 Tables\Columns\TextColumn::make('reste')
+                    ->label(__('Reste'))
                     ->getStateusing(fn ($record) => $record->amount - $record->paid_amount)
                     ->suffix(' DA'),
                 Tables\Columns\TextColumn::make('paid_at')
+                    ->label(__('Paid At'))
                     ->date('d-m-Y'),
                 Tables\Columns\TextColumn::make('status')
+                    ->label(__('Status'))
                     ->badge()
                     ->color(fn (PaymentStatusEnum $state): string => PaymentStatusEnum::color($state->value)),
             ])
@@ -88,13 +109,14 @@ class PaymentsRelationManager extends RelationManager
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Action::make('Pay')
+                    ->label(__('Pay'))
                     ->color('success')
                     ->icon('heroicon-o-check')
                     ->requiresConfirmation()
                     ->visible(fn ($record) => ($record->status != PaymentStatusEnum::PAID) && auth()->user()->can('mark_payment_as_paid_employee') && $record->paid_by === auth()->id())
                     ->form([
                         TextInput::make('amount')
-                            ->label('Amount')
+                            ->label(__('Amount'))
                             ->numeric()
                             ->minValue(0)
                             ->required(),

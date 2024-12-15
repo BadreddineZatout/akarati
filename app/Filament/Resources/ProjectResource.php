@@ -61,9 +61,10 @@ class ProjectResource extends Resource implements HasShieldPermissions
         return $form
             ->schema([
                 Forms\Components\TextInput::make('name')
+                    ->label(__('Name'))
                     ->required(),
                 Forms\Components\Select::make('status')
-                    ->label('State')
+                    ->label(__('Status'))
                     ->options(array_reduce(ProjectStatusEnum::cases(), function ($carry, $state) {
                         $carry[$state->value] = ucfirst(str_replace('_', ' ', $state->name));
 
@@ -90,8 +91,10 @@ class ProjectResource extends Resource implements HasShieldPermissions
                     ->getOptionLabelUsing(fn ($value) => User::find($value)?->name)
                     ->options(User::role('comptable')->pluck('name', 'id')->toArray())
                     ->required(),
-                Forms\Components\DatePicker::make('started_at'),
-                Forms\Components\DatePicker::make('ended_at'),
+                Forms\Components\DatePicker::make('started_at')
+                    ->label(__('Starts At')),
+                Forms\Components\DatePicker::make('ended_at')
+                    ->label(__('Ends At')),
             ]);
     }
 
@@ -99,15 +102,22 @@ class ProjectResource extends Resource implements HasShieldPermissions
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name'),
-                Tables\Columns\TextColumn::make('promoter.name'),
-                Tables\Columns\TextColumn::make('chef.name'),
-                Tables\Columns\TextColumn::make('accountant.name'),
+                Tables\Columns\TextColumn::make('name')
+                    ->label(__('Name')),
+                Tables\Columns\TextColumn::make('promoter.name')
+                    ->label(__('Promoter')),
+                Tables\Columns\TextColumn::make('chef.name')
+                    ->label(__('Chef')),
+                Tables\Columns\TextColumn::make('accountant.name')
+                    ->label(__('Accountant')),
                 Tables\Columns\TextColumn::make('started_at')
+                    ->label(__('Starts At'))
                     ->date('d-m-Y'),
                 Tables\Columns\TextColumn::make('ended_at')
+                    ->label(__('Ends At'))
                     ->date('d-m-Y'),
                 Tables\Columns\TextColumn::make('status')
+                    ->label(__('Status'))
                     ->badge()
                     ->color(fn ($record) => ProjectStatusEnum::color($record->status)),
             ])
@@ -115,6 +125,7 @@ class ProjectResource extends Resource implements HasShieldPermissions
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\Action::make('Generate Invoice')
+                    ->label(__('Generate Invoice'))
                     ->icon('heroicon-o-inbox-arrow-down')
                     ->color('success')
                     ->requiresConfirmation()

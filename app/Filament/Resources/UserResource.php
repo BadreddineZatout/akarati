@@ -13,7 +13,6 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Actions\Action;
-use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -67,19 +66,22 @@ class UserResource extends Resource implements HasShieldPermissions
         return $form
             ->schema([
                 Forms\Components\TextInput::make('name')
+                    ->label(__('Name'))
                     ->required(),
                 Forms\Components\TextInput::make('email')
+                    ->label(__('Email'))
                     ->email()
                     ->required()
                     ->unique(),
                 Forms\Components\TextInput::make('password')
+                    ->label(__('Password'))
                     ->required()
                     ->password()
                     ->maxLength(255)
                     ->rule(Password::default())
                     ->hiddenOn('view'),
                 Select::make('roles')
-                    ->label('Role')
+                    ->label(__('Role'))
                     ->required()
                     ->relationship('roles', 'name', fn ($query) => $query->where('name', '<>', 'super_admin')),
             ]);
@@ -89,15 +91,17 @@ class UserResource extends Resource implements HasShieldPermissions
     {
         return $table
             ->columns([
-                SpatieMediaLibraryImageColumn::make('avatar')
-                    ->disk(env('STORAGE_DISK')),
                 Tables\Columns\TextColumn::make('name')
+                    ->label(__('Name'))
                     ->searchable(),
                 Tables\Columns\TextColumn::make('email')
+                    ->label(__('Email'))
                     ->searchable(),
                 Tables\Columns\TextColumn::make('roles.name')
+                    ->label(__('Role'))
                     ->badge(),
                 Tables\Columns\TextColumn::make('created_at')
+                    ->label(__('Created At'))
                     ->dateTime(),
             ])
             ->modifyQueryUsing(fn (Builder $query) => auth()->user()->hasRole('super_admin') ? $query : $query->withoutRole('super_admin'))
@@ -108,6 +112,7 @@ class UserResource extends Resource implements HasShieldPermissions
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Action::make('deactivate')
+                    ->label(__('Deactivate'))
                     ->color('danger')
                     ->requiresConfirmation()
                     ->icon('heroicon-o-trash')

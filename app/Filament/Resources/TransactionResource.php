@@ -59,16 +59,19 @@ class TransactionResource extends Resource implements HasShieldPermissions
         return $form
             ->schema([
                 Forms\Components\Select::make('wallet_id')
+                    ->label(__('User'))
                     ->relationship('wallet', 'id', fn ($query) => $query->whereIn('user_id', User::withoutRole('super_admin')->pluck('id'))->where('user_id', '<>', auth()->id()))
                     ->getOptionLabelFromRecordUsing(fn ($record) => $record->user->name)
                     ->preload()
                     ->searchable()
                     ->required(),
                 Forms\Components\TextInput::make('amount')
+                    ->label(__('Amount'))
                     ->required()
                     ->numeric()
                     ->default(0),
                 Forms\Components\TextInput::make('status')
+                    ->label(__('Status'))
                     ->hiddenOn(['create', 'edit']),
             ]);
     }
@@ -78,11 +81,13 @@ class TransactionResource extends Resource implements HasShieldPermissions
         return $infolist
             ->schema([
                 TextEntry::make('issuedBy.name')
-                    ->label('Sent From'),
+                    ->label(__('Sent From')),
                 TextEntry::make('wallet.user.name')
-                    ->label('User'),
-                TextEntry::make('amount'),
+                    ->label(__('User')),
+                TextEntry::make('amount')
+                    ->label(__('Amount')),
                 TextEntry::make('status')
+                    ->label(__('Status'))
                     ->badge()
                     ->color(fn (TransactionStatusEnum $state): string => TransactionStatusEnum::color($state->value)),
             ]);
@@ -93,12 +98,15 @@ class TransactionResource extends Resource implements HasShieldPermissions
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('issuedBy.name')
-                    ->label('Sent From'),
-                Tables\Columns\TextColumn::make('wallet.user.name'),
+                    ->label(__('Sent From')),
+                Tables\Columns\TextColumn::make('wallet.user.name')
+                    ->label(__('User')),
                 Tables\Columns\TextColumn::make('amount')
+                    ->label(__('Amount'))
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('status')
+                    ->label(__('Status'))
                     ->badge()
                     ->color(fn (TransactionStatusEnum $state): string => TransactionStatusEnum::color($state->value)),
             ])
@@ -109,12 +117,14 @@ class TransactionResource extends Resource implements HasShieldPermissions
                     Tables\Actions\EditAction::make(),
                     Tables\Actions\DeleteAction::make(),
                     Action::make('Accept')
+                        ->label(__('Accept'))
                         ->icon('heroicon-o-check-circle')
                         ->color('success')
                         ->requiresConfirmation()
                         ->action(fn (Transaction $record, TransactionService $transactionService) => $transactionService->acceptTransaction($record))
                         ->visible(fn ($record) => ($record->status === TransactionStatusEnum::PENDING) && auth()->user()->can('accept_transaction_transaction') && $record->wallet_id === auth()->user()->wallet?->id),
                     Action::make('Refuse')
+                        ->label(__('Refuse'))
                         ->icon('heroicon-o-x-circle')
                         ->color('danger')
                         ->requiresConfirmation()
